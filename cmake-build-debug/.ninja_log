@@ -1,0 +1,7 @@
+# ninja log v6
+4	358	7394728911369171	CMakeFiles/Craps2024.dir/main.cpp.obj	1683e2899882336f
+1	235	7397044908872217	build.ninja	7d85ff7ea23802f0
+14	65	7394728451195781	CMakeFiles/Craps2024.dir/Node.cpp.obj	5db29c5678b4a3ae
+366	457	7394730026397267	Craps2024.exe	2ea1ac0f2b7aab31
+4	342	7394728451091309	CMakeFiles/Craps2024.dir/Player.cpp.obj	4edea8e760e6207c
+4	366	7394730022775073	CMakeFiles/Craps2024.dir/BetsLinkedList.cpp.obj	6433642ebb3bba9f

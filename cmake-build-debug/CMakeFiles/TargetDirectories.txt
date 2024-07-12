@@ -1,0 +1,3 @@
+C:/Users/treyf/OneDrive/Desktop/Craps2024/cmake-build-debug/CMakeFiles/Craps2024.dir
+C:/Users/treyf/OneDrive/Desktop/Craps2024/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/treyf/OneDrive/Desktop/Craps2024/cmake-build-debug/CMakeFiles/rebuild_cache.dir

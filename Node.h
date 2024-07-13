@@ -18,16 +18,38 @@ public:
     Node() : next{nullptr}, prev{nullptr} {};
 };
 
-class PlayerNode : public Node
-{
-public:
-    string gamblerName;
-
-    PlayerNode() : gamblerName{"Default"} {};
-    bool setName(string name);
-};
-
+// BetNode CLass
 class BetNode : public Node
 {
 public:
+    enum betTypes
+    {
+        default,
+        passBet,
+        dontPassBet,
+        fieldBelt,
+        placeBelt,
+        propositionBet
+    };
+
+    betTypes bet;
+    int wager;
+    int comeBet; // value for dontComeBets too
+
+    bool setBet(int betNum);
+    void setWager(int wage);
+    void setComeBet(int cb);
+};
+
+// PlayerNode Class
+class PlayerNode : public Node
+{
+public:
+    int balance;
+    string gamblerName;
+
+    PlayerNode() : balance{0}, gamblerName{"Default"} {};
+
+    bool setName(string name);
+    void setBalance(int money);
 };

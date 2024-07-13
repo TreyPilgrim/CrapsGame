@@ -39,8 +39,9 @@ int randNum()
 }
 int *rollDice()
 {
-
+    // Needs to be static so that the pointer can reference (local variable)
     static int theDie[2];
+
     // Assign two dice values
     theDie[0] = randNum();
     theDie[1] = randNum();

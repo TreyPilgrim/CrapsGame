@@ -1,7 +1,9 @@
 #pragma once
 #include <iostream>
 #include <memory>
+#include <string.h>
 
+using namespace std;
 class Node;
 
 using ptr = std::shared_ptr<Node>;
@@ -13,11 +15,19 @@ public:
     ptr next;
     ptr prev;
 
-    // true for Don't pass bar; false for Pass Line
-    bool passBar;
-    int pointNum;
-    int lineBet;
-    int oddsBet;
+    Node() : next{nullptr}, prev{nullptr} {};
+};
 
-    Node() : next{nullptr}, prev{nullptr}, passBar{false}, pointNum{0}, lineBet{0}, oddsBet{0} {}
+class PlayerNode : public Node
+{
+public:
+    string gamblerName;
+
+    PlayerNode() : gamblerName{"Default"} {};
+    bool setName(string name);
+};
+
+class BetNode : public Node
+{
+public:
 };

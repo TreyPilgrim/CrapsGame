@@ -15,7 +15,8 @@ public:
     ptr next;
     ptr prev;
 
-    Node() : next{nullptr}, prev{nullptr} {};
+    Node() : next{nullptr}, prev{nullptr} {}
+    ~Node() {}
 };
 
 // BetNode CLass
@@ -24,7 +25,7 @@ class BetNode : public Node
 public:
     enum betTypes
     {
-        default,
+        defaultType,
         passBet,
         dontPassBet,
         fieldBelt,
@@ -36,6 +37,7 @@ public:
     int wager;
     int comeBet; // value for dontComeBets too
 
+    BetNode() : bet{BetNode::defaultType}, wager{0}, comeBet{0} {};
     bool setBet(int betNum);
     void setWager(int wage);
     void setComeBet(int cb);

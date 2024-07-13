@@ -2,7 +2,7 @@
 #include <memory>
 #include <cstdlib>
 #include <ctime>
-#include "BetsLinkedList.h"
+#include "LinkedList.h"
 
 // Function Prototypes
 int randNum();

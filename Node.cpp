@@ -10,23 +10,22 @@ bool BetNode::setBet(int betNum)
     switch (betNum)
     {
     case 1:
-        this->bet = BetNode::passBet;
+        this->BetNode::bet = BetNode::passBet;
         break;
     case 2:
-        this->bet = BetNode::dontPassBet;
+        this->BetNode::bet = BetNode::dontPassBet;
         break;
     case 3:
-        this->bet = BetNode::fieldBelt;
+        this->BetNode::bet = BetNode::fieldBelt;
         break;
     case 4:
-        this->bet = BetNode::placeBelt;
+        this->BetNode::bet = BetNode::placeBelt;
         break;
     case 5:
-        this->bet = BetNode::propositionBet;
+        this->BetNode::bet = BetNode::propositionBet;
         break;
     default:
-        this->bet = BetNode::default;
-        return false;
+        this->BetNode::bet = BetNode::defaultType;
         break;
     }
 
@@ -36,13 +35,13 @@ bool BetNode::setBet(int betNum)
 // Setter for wager variable
 void BetNode::setWager(int wage)
 {
-    this->wager = wage;
+    this->BetNode::wager = wage;
 }
 
 // Setter for comeBet variable
 void BetNode::setComeBet(int cb)
 {
-    this->comeBet = cb;
+    this->BetNode::comeBet = cb;
 }
 
 /*-----------------------------------------------------------------------------------------
@@ -52,15 +51,15 @@ void BetNode::setComeBet(int cb)
 // Name Setter
 bool PlayerNode::setName(string name)
 {
-    if (this->gamblerName != "Default")
+    if (this->PlayerNode::gamblerName != "Default")
         return false;
 
-    this->gamblerName = name;
+    this->PlayerNode::gamblerName = name;
     return true;
 }
 
 // Set the balance
 void PlayerNode::setBalance(int money)
 {
-    this->balance = money;
+    this->PlayerNode::balance = money;
 }

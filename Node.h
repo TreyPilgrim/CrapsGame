@@ -45,10 +45,11 @@ public:
 class PlayerNode : public Node
 {
 public:
+    bool shooter;
     int balance;
     string gamblerName;
 
-    PlayerNode() : balance{0}, gamblerName{"Default"} {};
+    PlayerNode() : shooter{false}, balance{0}, gamblerName{"Default"} {};
 
     bool setName(string name);
     void setBalance(int money);

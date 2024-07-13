@@ -6,3 +6,7 @@
 
 - A thought, What if I added a text analyzer? In the event of misspelling, it would use an algorithm to detect whats the closest spelt word and inquires about "is this what you meant?"
   - will implement it in the basic "enter 1- easy; 2 - med; 3 - hard" format for now
+
+7/13/2024
+
+- Next login, work on PlayerLinkedList and BetLinkedList

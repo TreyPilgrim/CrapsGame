@@ -2,6 +2,7 @@
 #include <memory>
 #include <cstdlib>
 #include <ctime>
+#include <string>
 #include "LinkedList.h"
 
 // Function Prototypes
@@ -51,6 +52,21 @@ int *rollDice()
 }
 void Craps()
 {
+    LinkedList gamblers;
+    string player1 = "default";
+    int player1_Balance = 0;
+
+    cout << "What will be your better's name? ";
+    cin >> player1;
+
+    while (player1_Balance <= 20)
+    {
+        cout << "What will be your starting balance ($20+)? " << endl;
+        cin >> player1_Balance;
+    }
+
+    gamblers.push(player1, player1_Balance);
+
     int *theDie;
     theDie = rollDice();
 

@@ -13,11 +13,11 @@ class LinkedList;
 
 class LinkedList
 {
-private:
+protected:
     ptr head = make_shared<Node>();
     ptr tail = make_shared<Node>();
 
 public:
-    LinkedList() = default;
+    LinkedList() : head{make_shared<PlayerNode>()}, tail{make_shared<PlayerNode>()} { cout << "Link List initialized w/ PlayerNode pointers" << endl; }
     ~LinkedList() {}
 };

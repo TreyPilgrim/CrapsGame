@@ -83,7 +83,7 @@ CMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE
 CMAKE_FIND_PACKAGE_REDIRECTS_DIR:STATIC=C:/Users/treyf/Desktop/BootCamp/CrapsGame/build/CMakeFiles/pkgRedirects
 
 //Install path prefix, prepended onto install directories.
-CMAKE_INSTALL_PREFIX:PATH=C:/Program Files (x86)/Craps2024
+CMAKE_INSTALL_PREFIX:PATH=C:/Program Files (x86)/CrapsGame
 
 //Path to a program.
 CMAKE_LINKER:FILEPATH=C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/VC/Tools/MSVC/14.29.30133/bin/Hostx64/x64/link.exe
@@ -118,7 +118,7 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=Craps2024
+CMAKE_PROJECT_NAME:STATIC=CrapsGame
 
 //RC compiler
 CMAKE_RC_COMPILER:FILEPATH=rc
@@ -192,13 +192,13 @@ CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
 //Value Computed by CMake
-Craps2024_BINARY_DIR:STATIC=C:/Users/treyf/Desktop/BootCamp/CrapsGame/build
+CrapsGame_BINARY_DIR:STATIC=C:/Users/treyf/Desktop/BootCamp/CrapsGame/build
 
 //Value Computed by CMake
-Craps2024_IS_TOP_LEVEL:STATIC=ON
+CrapsGame_IS_TOP_LEVEL:STATIC=ON
 
 //Value Computed by CMake
-Craps2024_SOURCE_DIR:STATIC=C:/Users/treyf/Desktop/BootCamp/CrapsGame
+CrapsGame_SOURCE_DIR:STATIC=C:/Users/treyf/Desktop/BootCamp/CrapsGame
 
 
 ########################

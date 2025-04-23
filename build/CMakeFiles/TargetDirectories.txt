@@ -1,0 +1,3 @@
+C:/Users/treyf/Desktop/BootCamp/CrapsGame/build/CMakeFiles/CrapsGame.dir
+C:/Users/treyf/Desktop/BootCamp/CrapsGame/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/treyf/Desktop/BootCamp/CrapsGame/build/CMakeFiles/ZERO_CHECK.dir

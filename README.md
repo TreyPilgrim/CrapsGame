@@ -56,3 +56,146 @@
   - Check that dice value rolled isn't/is a winner/craps
   - Code the logic for ongoing bets (come/dontCome)
   - Revamp the game with boolean checkers for the round being new/ongoing/quit
+
+9/3/2024
+
+- The goal for today is upgrade the BetList and PlayerList classes
+  - Determine if BetNode is a winner (BetList)
+    - Return winnings (+/-)
+  - Function in PlayerList to parse every node's BetList function to get winnings/losings
+    - Add to Player's wages
+
+9/5/2024
+
+- PlayerList function
+  - parse every node's BetList
+  - get Winnings/Losings
+    - Add to Player Wages
+
+9/7/2024
+
+- The goal is to restructure all functions to only display/get/set information
+  - Keep the task(s) simple
+    -> anything like cin/case checking/etc save for main Craps Function
+
+10/16/2024
+
+- Felt discouraged by outside influences to finish this project. Will be the last time I allow something like that to happen.
+- Spent yesterday refreshing myself with the code base.
+- Spending today before work to knock out arithmetic for the dice rolling results.
+  - Going to make a stack to hold the different types of bets
+  - Had an epiphany that an AVL would be more optimal for searching. Going to start working on building the AVL this week.
+
+12/29/2024
+
+- Finally finished implementing the BetList as a tree
+- Continuing production today for the rest of the game mechanics
+- Adding shooter validation as well as updating.
+  - Going to have a pointer constantly looking at the shooter to avoid searching all the time
+
+TODO:: 12/29
+Work on mechanics after a roll has been made
+
+1/6/2025
+
+TODO: Work on ID for added bets
+
+1/15/2025
+
+Glad with production... will be debugging...
+
+1/27/2025
+
+TODO: Revamp Remove and Insert (clean up code, finish coding remove)
+
+- Insert has been beefed up and completed
+
+TODO: Create a Stack for the winning/losing bets to make displaying easier
+
+1/29/2025
+
+- A lot of code had logic errors. Proof read all code pertaining to rotations and buffered it
+- Buffed up the code for insertion
+- Decided to use vectors to keep up with winning/losing tickets so that sorting can be easier // gotta do logic for this
+- That i can think of; after implementing remove; i have to implement display features then finish implementing the Craps function and this game should be just about done... for now lol
+
+1/31/2025
+
+- For the remove logic; I want it to automatically find the post successor in the event that there is no left subtree (should only be 1 node because of AVL logic but still)
+
+2/2/2025
+
+- Found out there were numerous bets left out of the game... thanks chatgpt
+  - will return to this.
+- The main focus is getting the remove functionality finished today.
+  - 2 big functions;
+    -> 1 to add tickets to list (DONE)
+    -> 1 to parse vector and remove nodes from tree
+    -> update wages (may make a function) then clear vectors
+
+2/3/2025
+
+- Need to update insert and creation of betNodes to handle all bet types
+- Thinking about turning the Craps game into a Object (OOP) will determine in coming days
+- Where to Pick UP: first point ^^ then work on functions for determining if node is a winner
+
+2/16/2025
+
+- Make all bets that have a "First roll" work with the comeOut Roll operation (50% \*3/3)
+
+2/18/2025
+
+- Make nodes have a "firstRoll" bool value to track if the bet is in it's first roll phase (DONE)
+  -> add functions to update bool value (DONE)
+
+3/1/2025
+
+- Add a "winnings"/"To Win" value in BetNode.h
+- Update PlayerNode.h to call functions that clear out winning/losing/draw lists
+- Finish winning/losing/draw function in BetAVL.h
+
+3/3/2025
+
+Todo:
+
+- BetAVL::insert(int wageType, int wage, int point)
+
+Completed:
+
+3/15/2025
+
+- make PlayerList::pushWager accept char values and determine what the bet type is from there -- possibly return an int (0 - 0 errors; 1 - invalid funds; 2 - invalid input for betType)
+
+completed:
+
+- Look into placing the enum values in BetAVL
+  -> consider using a map to make assignment easier - currently makes an enum each time a node is made (uneccessary)
+  -> UPDATE 4/2/25: chose not to go this route. Considering making a map in order to displaying a little easier but tbd
+
+4/5/25
+
+- Look into
+  -> Making Craps quit after roller craps out. \* from there prompt if the user wants to keep playing
+
+4/7/2025
+
+- Working on reframing front end.
+
+I didn't like how the user had case sensitive entries for choices. Craps is played in a Casino, people are drunk - off both booze and adrenaline - remembering to capitalize 'a' isn't something they should worry about. will make char a string to handle double digits and Roll and Quit can still be char inputs. betType is represented as a # in code so this will make comparison easier as well
+
+4/8/2025
+
+TODO (4/9/2025)
+
+- Reconstruct BetAVL
+  -> I want BetNode to be a shell that only holds information. I don't want any functions besides getters and setters in it
+  Completed:
+
+4/11/2025
+
+            TODO:
+
+            Look into "Make 'em All" bets
+            175:1 odds
+
+            Completed:

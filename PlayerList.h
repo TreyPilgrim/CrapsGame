@@ -7,24 +7,33 @@
 class PlayerList
 {
 private:
-    using ptr = std::shared_ptr<PlayerNode>; // For tmp pointers to head/tail
-
-    ptr head;
-    ptr tail;
+    playerNodePtr head;
+    playerNodePtr tail;
+    playerNodePtr shooter;
 
     bool validName(const string name);
-    bool peek();
+    bool isEmpty();
 
 public:
-    PlayerList() : head{nullptr}, tail{nullptr} {}
+    PlayerList() : head{nullptr}, tail{nullptr}, shooter{nullptr} {}
     ~PlayerList() = default;
 
-    bool pushPlayer(std::string name, int &playerBalance);
-    void pushWager(std::string name, int wageType, int wage);
+    // Get Player1
+    playerNodePtr getP1();
 
-    ptr find(const std::string name); // find a specific node, return it (brute force as of now)
-    bool pop(std::string name);       // remove node via name
+    // Checker
+    bool validWinAmount(char betType, int betAmount);
+    bool pushPlayer(std::string name, int &playerBalance);
+    bool pushWager(std::string name, int wageType, int wage);
+    bool setShooter();
+    bool p1Shooter();
+
+    playerNodePtr find(const std::string name); // find a specific node, return it (brute force as of now)
+    bool pop(std::string name);                 // remove node via name
+    std::string peek();                         // peek at the head node's name
 
     void displayPlayers();
     void displaySelf();
+
+    void comeOutWin();
 };

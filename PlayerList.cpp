@@ -5,44 +5,45 @@
 -------------------------------------------------------*/
 bool PlayerList::validName(const string name)
 {
-    ptr tmp = nullptr;
-    tmp = head;
+    std::cout << "validName func\n";
+    playerNodePtr tmp = nullptr;
+    tmp = find(name);
+    std::cout << "name not found\n";
 
-    while (tmp != nullptr)
-    {
-        if (name == tmp->gamblerName)
-            return false; // Case that name found in list already
+    // Return false if name was found
+    if (tmp != nullptr)
+        return false;
 
-        tmp = tmp->next;
-    }
-
+    std::cout << "return true\n";
     return true;
 }
 
-bool PlayerList::peek()
+bool PlayerList::isEmpty()
 {
     if (this->head == nullptr)
-        return false;
+        return true;
 
-    return true;
+    return false;
 }
 
 /*-----------------------------------------------------
     PlayerList Public Functions
 -------------------------------------------------------*/
+
+// Checkers
+
 // Add a new player to linked list
 bool PlayerList::pushPlayer(string name, int &playerBalance)
 {
     // Make sure name is unique
     if (!this->validName(name))
-    {
-        std::cout << "The name \"" << name << "\" is already in use by another player..." << std::endl;
         return false;
-    }
+
+    std::cout << "name is valid\n";
 
     // Push to tail
-    ptr tmp = std::make_shared<PlayerNode>(name, playerBalance);
-    if (!this->peek()) // Update head on empty list
+    playerNodePtr tmp = std::make_shared<PlayerNode>(name, playerBalance);
+    if (this->isEmpty()) // Update head on empty list
         this->head = tmp;
     else
     {
@@ -50,34 +51,89 @@ bool PlayerList::pushPlayer(string name, int &playerBalance)
         tmp->prev = this->tail;
     }
 
+    std::cout << "List updated\n";
+
     this->tail = tmp; // Update tail
-    return true;      // Return true after successful push
+
+    std::cout << "returning true from push\n";
+    return true; // Return true after successful push
 }
 
-void PlayerList::pushWager(std::string name, int wageType, int wage)
+// Pushing a wager
+bool PlayerList::pushWager(std::string name, int wageType, int wage)
 {
-    // ptr tmp = find(name);
+    playerNodePtr tmp = find(name);
 
-    // if (tmp == nullptr)
-    //     return false; // Player not found
-    ptr tmp = nullptr;
-    tmp = PlayerList::head;
+    if (tmp == nullptr)
+        return false; // Player not found
 
-    tmp->playerBets->pushBet(wageType, wage);
+    if (!tmp->validFunds(wage)) // Insuficient(?) funds
+        return false;
+
+    // Push the Bet into the List
+    tmp->playerBets->insert(wageType, wage);
+
+    // Update the balance to show the funds are now on the boards
+    tmp->setBalance(-wage);
+
+    return true;
 }
 
-// Because ptr is a specific alias, gotta specify which class
+bool PlayerList::setShooter()
+{
+    playerNodePtr oldShooter;
+
+    if (isEmpty())
+        return false;
+
+    if (shooter == nullptr)
+    {
+        shooter = head;
+        shooter->newShooter();
+    }
+    else if (shooter->next == nullptr && shooter->prev == nullptr) // Only 1 player in queue
+    {
+        // Do nothing
+    }
+    else if (shooter->next == nullptr) // Event shooter is the tail
+    {
+        oldShooter = shooter;
+        shooter = head;
+
+        // unassign old shooter, assign new shooter
+        oldShooter->newShooter();
+        shooter->newShooter();
+    }
+    else // player is in middle of queue
+    {
+        oldShooter = shooter;
+        shooter = shooter->next;
+
+        // Unassign old shooter, assign new shooter
+        oldShooter->newShooter();
+        shooter->newShooter();
+    }
+
+    return true;
+}
+
+bool PlayerList::p1Shooter()
+{
+    return this->head->isShooter();
+}
+
+// Because playerNodePtr is a specific alias, gotta specify which class
 // Function to return specific players by name
-ptr PlayerList::find(const string name)
+playerNodePtr PlayerList::find(const string name)
 {
-    ptr tmp = nullptr;
+    playerNodePtr tmp = nullptr;
     tmp = head;
 
     // Brute force to search for name
     // TODO: When AI is implemented.. Add more effecient search algorithm
     while (tmp != nullptr)
     {
-        if (tmp->gamblerName == name)
+        if (tmp->getName() == name)
             return tmp;
 
         tmp = tmp->next;
@@ -90,7 +146,7 @@ ptr PlayerList::find(const string name)
 // Shared pointers auto delete when nothing is looking at it
 bool PlayerList::pop(string name)
 {
-    ptr tmp = nullptr;
+    playerNodePtr tmp = nullptr;
     tmp = this->find(name);
 
     // Return false on empty list or name not found
@@ -116,11 +172,17 @@ bool PlayerList::pop(string name)
     return true;
 }
 
+// Peek at the head node's name
+std::string PlayerList::peek()
+{
+    return this->head->getName();
+}
+
 void PlayerList::displaySelf()
 {
-    ptr tmp = nullptr;
+    playerNodePtr tmp = nullptr;
     tmp = this->head;
 
-    std::cout << "Player Name: " << tmp->gamblerName << std::endl;
-    std::cout << "Player Wages: " << tmp->balance << std::endl;
+    std::cout << "Player Name: " << tmp->getName() << std::endl;
+    std::cout << "Player Balance: " << tmp->getBalance() << std::endl;
 }

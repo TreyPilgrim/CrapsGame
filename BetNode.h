@@ -1,43 +1,83 @@
 #pragma once
 #include <iostream>
 #include <memory>
-#include <string.h>
+#include <string>
+#include <list>
 
 // BetNode CLass
+class BetNode;
+// Type Alias
+using betNodePtr = std::shared_ptr<BetNode>;
+
+/*
+    TODO
+    create a "toWin" value to provide quick
+    - setters
+    - getters
+*/
+
 class BetNode
 {
 private:
-    enum betTypes
-    {
-        defaultType, // 0
-        passBet,     // 1
-        dontPassBet, // 2
-        comeBet,     // 3
-        dontComeBet, // 4
+    // Tree Attributes
+    int bf, height;
+    std::string betId{"void"};
 
-    };
-
-    betTypes bet;
     int wager;
+    int toWin;
+    int point;
+    bool firstRoll{true};
+    std::list<int> hits; // certain bets need multiple rolls to win. tracker of winning hits/rolls
 
+    // Generate prefix
 public:
-    // Type Alias
-    using ptr = std::shared_ptr<BetNode>;
-    ptr next;
-    ptr prev;
+    betNodePtr lChild;
+    betNodePtr rChild;
 
-    // Constructor
-    BetNode() : next(nullptr), prev(nullptr), bet{BetNode::defaultType}, wager{0} {}
-    BetNode(int wageType, int wage) : next(nullptr), prev(nullptr)
+    // Constructord
+    BetNode() : lChild(nullptr),
+                rChild(nullptr),
+                bf{0},
+                height{0},
+                wager{0},
+                point{0}
+
     {
-        this->setWageType(wageType);
-        this->setWager(wage);
-        std::cout << "BetNode initialized\n";
     }
 
+    BetNode(int wageType, int wage, int point = 0) : lChild{nullptr},
+                                                     rChild{nullptr},
+                                                     bf{0}
+    {
+
+        this->setWager(wage);
+        this->setPoint(point);
+        std::cout << "BetNode Initialized\n";
+    }
+
+    // // Checkers
+    // bool validBet(int);
+
     // Setters
-    void setWageType(int betNum);
+    void setID(std::string str);
+    void setBF(int balFact);
+    void setHeight(int h);
+    void setBetType(int betNum);
+    void setPoint(int point);
+    // Wager - and helpers related
+    bool validWage(int wage);
     void setWager(int wage);
 
     // Getters
+    std::string getID();
+    int getBF();
+    int getHeight();
+    int getPoint();
+    int getWager();
+    char getBetType();
+    int const childSupport();
+
+    // Update First Roll status
+    bool isFirstRoll();
+    void secondRoll();
 };

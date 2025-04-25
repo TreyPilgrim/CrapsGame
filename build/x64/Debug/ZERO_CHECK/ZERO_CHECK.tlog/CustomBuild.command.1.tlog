@@ -1,0 +1,10 @@
+^C:\USERS\TREYF\DESKTOP\BOOTCAMP\CRAPSGAME\BUILD\CMAKEFILES\745C22C2939357C13CBA67D89AE8942E\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/treyf/Desktop/BootCamp/CrapsGame -BC:/Users/treyf/Desktop/BootCamp/CrapsGame/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/treyf/Desktop/BootCamp/CrapsGame/build/CrapsGame.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

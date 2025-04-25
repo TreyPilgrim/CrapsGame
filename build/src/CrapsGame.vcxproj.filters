@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\treyf\Desktop\BootCamp\CrapsGame\src\bets\BetAVL.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\treyf\Desktop\BootCamp\CrapsGame\src\bets\BetNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\treyf\Desktop\BootCamp\CrapsGame\src\game\Craps.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\treyf\Desktop\BootCamp\CrapsGame\src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\treyf\Desktop\BootCamp\CrapsGame\src\players\PlayerList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\treyf\Desktop\BootCamp\CrapsGame\src\players\PlayerNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\treyf\Desktop\BootCamp\CrapsGame\src\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{5F0F32E5-D5F6-3E79-8B71-3D84694165CE}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

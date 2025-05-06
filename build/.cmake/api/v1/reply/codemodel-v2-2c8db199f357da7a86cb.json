@@ -69,7 +69,7 @@
 				{
 					"directoryIndex" : 1,
 					"id" : "CrapsGame::@145eef247bfb46b6828c",
-					"jsonFile" : "target-CrapsGame-Debug-3c42e026bf7f06c0e8f7.json",
+					"jsonFile" : "target-CrapsGame-Debug-a013b332dfcc4bd0714e.json",
 					"name" : "CrapsGame",
 					"projectIndex" : 0
 				},
@@ -150,7 +150,7 @@
 				{
 					"directoryIndex" : 1,
 					"id" : "CrapsGame::@145eef247bfb46b6828c",
-					"jsonFile" : "target-CrapsGame-Release-cb1b8c34619219f0f7f2.json",
+					"jsonFile" : "target-CrapsGame-Release-f37604da6da2bd568dad.json",
 					"name" : "CrapsGame",
 					"projectIndex" : 0
 				},
@@ -231,7 +231,7 @@
 				{
 					"directoryIndex" : 1,
 					"id" : "CrapsGame::@145eef247bfb46b6828c",
-					"jsonFile" : "target-CrapsGame-MinSizeRel-44a8b073d4159c4030dc.json",
+					"jsonFile" : "target-CrapsGame-MinSizeRel-ac895ea32907d1b5948f.json",
 					"name" : "CrapsGame",
 					"projectIndex" : 0
 				},
@@ -312,7 +312,7 @@
 				{
 					"directoryIndex" : 1,
 					"id" : "CrapsGame::@145eef247bfb46b6828c",
-					"jsonFile" : "target-CrapsGame-RelWithDebInfo-7348f48b39dc733cd029.json",
+					"jsonFile" : "target-CrapsGame-RelWithDebInfo-dd2a9eec52987797779b.json",
 					"name" : "CrapsGame",
 					"projectIndex" : 0
 				},

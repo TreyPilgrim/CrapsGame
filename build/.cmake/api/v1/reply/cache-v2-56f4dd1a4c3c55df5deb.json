@@ -18,6 +18,18 @@
 			"value" : "C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/VC/Tools/MSVC/14.29.30133/bin/Hostx64/x64/lib.exe"
 		},
 		{
+			"name" : "CMAKE_BUILD_TYPE",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "No help, variable specified on the command line."
+				}
+			],
+			"type" : "STRING",
+			"value" : "Debug"
+		},
+		{
 			"name" : "CMAKE_CACHEFILE_DIR",
 			"properties" : 
 			[
@@ -396,6 +408,18 @@
 			],
 			"type" : "STRING",
 			"value" : "/debug /INCREMENTAL"
+		},
+		{
+			"name" : "CMAKE_EXPORT_COMPILE_COMMANDS",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "No help, variable specified on the command line."
+				}
+			],
+			"type" : "BOOL",
+			"value" : "TRUE"
 		},
 		{
 			"name" : "CMAKE_EXTRA_GENERATOR",
@@ -796,18 +820,6 @@
 			],
 			"type" : "INTERNAL",
 			"value" : "C:/Program Files/CMake/share/cmake-3.30"
-		},
-		{
-			"name" : "CMAKE_RUNTIME_OUTPUT_DIRECTORY",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "No help, variable specified on the command line."
-				}
-			],
-			"type" : "UNINITIALIZED",
-			"value" : "../bin"
 		},
 		{
 			"name" : "CMAKE_SHARED_LINKER_FLAGS",

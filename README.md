@@ -198,4 +198,10 @@ TODO (4/9/2025)
             Look into "Make 'em All" bets
             175:1 odds
 
-            Completed:
+            Completed: done
+
+4/26/25
+
+Goal for today's branch is to get polymorphism set up for the BetNode Class
+
+Completed:

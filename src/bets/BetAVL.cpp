@@ -9,7 +9,7 @@ int ARR_SIZE = 7;
 // get node's height (recursively checks subtree)
 int BetAVL::nodeHeight(betNodePtr node)
 {
-    // For the recursion mainly
+    // For the recursion
     if (node == nullptr)
         return -1; // error
 

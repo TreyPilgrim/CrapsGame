@@ -28,19 +28,13 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 10,
+				"line" : 12,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 13,
-				"parent" : 0
-			},
-			{
-				"command" : 1,
-				"file" : 0,
-				"line" : 16,
+				"line" : 15,
 				"parent" : 0
 			}
 		]
@@ -61,19 +55,19 @@
 					"path" : "C:/Users/treyf/Desktop/BootCamp/CrapsGame/src"
 				},
 				{
-					"backtrace" : 3,
+					"backtrace" : 2,
 					"path" : "C:/Users/treyf/Desktop/BootCamp/CrapsGame/src/bets"
 				},
 				{
-					"backtrace" : 3,
+					"backtrace" : 2,
 					"path" : "C:/Users/treyf/Desktop/BootCamp/CrapsGame/src/players"
 				},
 				{
-					"backtrace" : 3,
+					"backtrace" : 2,
 					"path" : "C:/Users/treyf/Desktop/BootCamp/CrapsGame/src/game"
 				},
 				{
-					"backtrace" : 3,
+					"backtrace" : 2,
 					"path" : "C:/Users/treyf/Desktop/BootCamp/CrapsGame/src/utils"
 				}
 			],

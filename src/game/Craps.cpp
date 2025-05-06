@@ -3,30 +3,6 @@
 /*
     Private Functions
 */
-int Craps::randNum()
-{
-    // Generate 3 random #'s to ensure radomness
-    int dice;
-    for (int i = 0; i < 3; i++)
-        dice = (rand() % 6) + 1;
-
-    // Return dice value
-    return dice;
-}
-
-int *Craps::rollDice()
-{
-    // Needs to be static so that the pointer can reference (local variable)
-    static int theDie[3];
-
-    // Assign two dice values
-    theDie[0] = randNum();
-    theDie[1] = randNum();
-    theDie[2] = theDie[0] + theDie[1]; // total
-
-    // return pointer
-    return theDie;
-}
 
 //-----------------------------------------------------------------------------------------
 // Menu Functions
@@ -228,7 +204,7 @@ void Craps::setP1()
 
     std::cout << p1Balance << " will be your starting balance" << std::endl;
 
-    while (!Gamblers.pushPlayer(player1, p1Balance))
+    while (!Gamblers->pushPlayer(player1, p1Balance))
     {
         std::cout << "The name \"" << player1 << "\" is already in use by another player..." << std::endl;
         std::cout << "Enter another player name\n";

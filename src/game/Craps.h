@@ -20,6 +20,7 @@ private:
     std::list<int> activePoints;
     dicePtr dice = std::make_shared<Dice>();
     playerPtr Gamblers = std::make_shared<PlayerList>(); // List of players
+
     /*
         Private Functions
     */

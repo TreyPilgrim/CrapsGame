@@ -1,12 +1,14 @@
 #include <string>
 #include <list>
-#include <vector>
-#include <cstdlib>
-#include <ctime>
+#include <memory>
 #include <cctype> // isdigit
 #include <iostream>
 #include <limits>
-#include "PlayerList.h"
+#include "players/PlayerList.h"
+#include "utils/Dice.h"
+
+using dicePtr = std::shared_ptr<Dice>;
+using playerPtr = std::shared_ptr<PlayerList>;
 class Craps
 {
 private:
@@ -14,16 +16,13 @@ private:
         Private Attributes
     */
     bool comeOutRoll = true;
-    PlayerList Gamblers; // List of players
     const int minWager{15};
     std::list<int> activePoints;
-
+    dicePtr dice = std::make_shared<Dice>();
+    playerPtr Gamblers = std::make_shared<PlayerList>(); // List of players
     /*
         Private Functions
     */
-    // Dice Functions
-    int randNum();
-    int *rollDice();
 
     // Menu Functions
     // TODO: Welcome Screen

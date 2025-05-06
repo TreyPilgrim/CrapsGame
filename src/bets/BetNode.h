@@ -68,10 +68,6 @@ public:
     int getWager();
     char getBetType();
     int const childSupport();
-
-    // Update First Roll status
-    bool isFirstRoll();
-    void secondRoll();
 };
 
 //-----------------------------------------------------------------------------------------
@@ -84,6 +80,7 @@ private:
     int point{0};
     const std::unordered_set<int> winningVals{7, 11};
     const std::unordered_set<int> losingVals{2, 3, 12};
+    betNodePtr oddsOnPassPtr;
 
 public:
     // Possible virutal function tbd
@@ -100,6 +97,7 @@ class DontPassLineBet : public BetNode
 private:
     bool firstRoll{true};
     int point{0};
+    betNodePtr oddsOnDontPassPtr;
 
     const std::unordered_set<int> winningVals{2, 3, 12};
     const std::unordered_set<int> losingVals{7, 11};
@@ -121,6 +119,7 @@ private:
     int point{0};
     const std::unordered_set<int> winningVals{7, 11};
     const std::unordered_set<int> losingVals{2, 3, 12};
+    betNodePtr oddsOnComePtr;
 
 public:
     // Possible virutal function tbd
@@ -140,6 +139,7 @@ private:
 
     const std::unordered_set<int> winningVals{2, 3, 12};
     const std::unordered_set<int> losingVals{7, 11};
+    betNodePtr oddsOnDontComePtr;
 
 public:
     void notFirstRoll();

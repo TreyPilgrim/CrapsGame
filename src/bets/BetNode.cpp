@@ -37,11 +37,11 @@ void BetNode::setPoint(int point)
 
 // Valid Wager - return whole number
 
-// wager variable
+// wage variable
 void BetNode::setWager(int wage)
 {
-    this->wager = std::move(wage);
-    std::cout << "Wager: " << this->wager << std::endl;
+    this->wage = std::move(wage);
+    std::cout << "Wager: " << this->wage << std::endl;
 }
 
 //-----------------------------------------------------------------------------------------
@@ -71,10 +71,10 @@ int BetNode::getPoint()
     return this->point;
 }
 
-// wager amount
+// wage amount
 int BetNode::getWager()
 {
-    return this->wager;
+    return this->wage;
 }
 
 // bet type
@@ -107,18 +107,173 @@ int const BetNode::childSupport()
     return id;
 }
 ---------------------------------------------*/
-
 //-----------------------------------------------------------------------------------------
-// Update First roll status
+/*
+    Come Out Roll Bets
+*/
 
-// Is this the first roll for the bet?
-bool BetNode::isFirstRoll()
-{
-    return this->firstRoll;
-}
+// Derived Class : Pass Line Bet
 
-// Turn first roll status to false
-void BetNode::secondRoll()
+// Update the first roll value - point needs to be establish
+void PassLineBet::notFirstRoll()
 {
     this->firstRoll = false;
+}
+
+// Winning Ticket Checker
+bool PassLineBet::winningTicket(const int diceVal)
+{
+    if (this->firstRoll)
+    {
+        // iterator for searching
+        auto it = winningVals.find(diceVal);
+
+        // return false if value not found - does not always mean it is a loser... don't assume
+        return (it == winningVals.end()) ? false : true;
+    }
+
+    // Point Established
+    return (diceVal == this->point) ? true : false;
+}
+
+// Losing Ticket Checker
+bool PassLineBet::losingTicket(const int diceVal)
+{
+    if (this->firstRoll)
+    {
+        // Iterator for searching
+        auto it = losingVals.find(diceVal);
+
+        // Return false if value not found - does not always mean winner... don't assume
+        return (it == losingVals.end()) ? false : true;
+    }
+
+    // Point Established
+    return (diceVal == 7) ? true : false;
+}
+
+//-----------------------------------------------------------------------------------------
+// Derived Class : Dont Pass Line Bet
+
+// Update the first roll value - point needs to be establish
+void DontPassLineBet::notFirstRoll()
+{
+    this->firstRoll = false;
+}
+
+// Winning Ticket Checker
+bool DontPassLineBet::winningTicket(const int diceVal)
+{
+    if (this->firstRoll)
+    {
+        // iterator for searching
+        auto it = winningVals.find(diceVal);
+
+        // return false if value not found - does not always mean it is a loser... don't assume
+        return (it == winningVals.end()) ? false : true;
+    }
+
+    // Point Established
+    return (diceVal == 7) ? true : false;
+}
+
+// Losing Ticket Checker
+bool DontPassLineBet::losingTicket(const int diceVal)
+{
+    if (this->firstRoll)
+    {
+        // Iterator for searching
+        auto it = losingVals.find(diceVal);
+
+        // Return false if value not found - does not always mean winner... don't assume
+        return (it == losingVals.end()) ? false : true;
+    }
+
+    // Point Established
+    return (diceVal == this->point) ? true : false;
+}
+
+//-----------------------------------------------------------------------------------------
+/*
+    Post-Come Out Roll Bets
+*/
+// Derived Class : Pass Line Bet
+
+// Update the first roll value - point needs to be establish
+void ComeBet::notFirstRoll()
+{
+    this->firstRoll = false;
+}
+
+// Winning Ticket Checker
+bool ComeBet::winningTicket(const int diceVal)
+{
+    if (this->firstRoll)
+    {
+        // iterator for searching
+        auto it = winningVals.find(diceVal);
+
+        // return false if value not found - does not always mean it is a loser... don't assume
+        return (it == winningVals.end()) ? false : true;
+    }
+
+    // Point Established
+    return (diceVal == this->point) ? true : false;
+}
+
+// Losing Ticket Checker
+bool ComeBet::losingTicket(const int diceVal)
+{
+    if (this->firstRoll)
+    {
+        // Iterator for searching
+        auto it = losingVals.find(diceVal);
+
+        // Return false if value not found - does not always mean winner... don't assume
+        return (it == losingVals.end()) ? false : true;
+    }
+
+    // Point Established
+    return (diceVal == 7) ? true : false;
+}
+
+//-----------------------------------------------------------------------------------------
+// Derived Class : Dont Come Bet
+
+// Update the first roll value - point needs to be establish
+void DontComeBet::notFirstRoll()
+{
+    this->firstRoll = false;
+}
+
+// Winning Ticket Checker
+bool DontComeBet::winningTicket(const int diceVal)
+{
+    if (this->firstRoll)
+    {
+        // iterator for searching
+        auto it = winningVals.find(diceVal);
+
+        // return false if value not found - does not always mean it is a loser... don't assume
+        return (it == winningVals.end()) ? false : true;
+    }
+
+    // Point Established
+    return (diceVal == 7) ? true : false;
+}
+
+// Losing Ticket Checker
+bool DontComeBet::losingTicket(const int diceVal)
+{
+    if (this->firstRoll)
+    {
+        // Iterator for searching
+        auto it = losingVals.find(diceVal);
+
+        // Return false if value not found - does not always mean winner... don't assume
+        return (it == losingVals.end()) ? false : true;
+    }
+
+    // Point Established
+    return (diceVal == this->point) ? true : false;
 }

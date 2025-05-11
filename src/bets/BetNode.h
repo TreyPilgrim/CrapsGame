@@ -40,7 +40,7 @@ public:
     // Constructord
     BetNode() {}
 
-    BetNode(int wageType, int wage, int point = 0)
+    BetNode(int wage, int point = 0)
     {
         this->setWager(wage);
         this->setPoint(point);

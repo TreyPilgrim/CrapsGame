@@ -443,7 +443,7 @@ bool BetAVL::insert(int wageType, int wage, int point)
     // TODO: Add checking functionality for valid winnings
 
     // Point automatically passes as 0 if no point provided
-    betNode = std::make_shared<BetNode>(wageType, wage, point);
+    betNode = std::make_shared<BetNode>(wage, point);
 
     while (!insert(this->root, betNode))      // Duplicate ID will return false
         betNode->setID(generateID(wageType)); // reset ID then loop again

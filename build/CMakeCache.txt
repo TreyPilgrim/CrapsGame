@@ -138,9 +138,6 @@ CMAKE_RC_FLAGS_RELEASE:STRING=
 //Flags for Windows Resource Compiler during RELWITHDEBINFO builds.
 CMAKE_RC_FLAGS_RELWITHDEBINFO:STRING=
 
-//No help, variable specified on the command line.
-CMAKE_RUNTIME_OUTPUT_DIRECTORY:UNINITIALIZED=../bin
-
 //Flags used by the linker during the creation of shared libraries
 // during all build types.
 CMAKE_SHARED_LINKER_FLAGS:STRING=/machine:x64

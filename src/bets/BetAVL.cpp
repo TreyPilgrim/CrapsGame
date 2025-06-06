@@ -1,5 +1,5 @@
 #include "BetAVL.h"
-int ARR_SIZE = 7;
+
 /*
     Private Methods
 */
@@ -165,63 +165,6 @@ void BetAVL::subTreeReBalance(betNodePtr &node)
     Random Generators
 */
 
-// Random number 0-9 Generator
-int BetAVL::randNum()
-{
-    return rand() % 10;
-}
-
-arr BetAVL::randomArr()
-{
-    arr tmp = std::shared_ptr<int[]>(new int[ARR_SIZE]);
-
-    for (int i = 0; i < ARR_SIZE; i++)
-    {
-        tmp[i] = randNum();
-    }
-
-    return tmp;
-}
-
-// Converting array of random #s into strings so ID can be made
-std::string BetAVL::arrToString(arr tmp)
-{
-    std::string str;
-
-    for (int i = 0; i < ARR_SIZE; i++)
-    {
-        str += std::to_string(tmp[i]);
-    }
-
-    return str;
-}
-
-// ID Generator
-std::string BetAVL::generateID(int userInput) // User Input is the type of bet
-{
-    std::string prefix, numString, ID;
-
-    prefix = numberToChar[userInput];
-
-    arr nums = randomArr();
-    numString = arrToString(nums);
-
-    ID = prefix + numString;
-
-    return ID;
-}
-
-// Id checker
-bool BetAVL::sameID(const betNodePtr node, const betNodePtr betNode)
-{
-    if (node->getID() == betNode->getID())
-        return true;
-
-    return false;
-}
-
-// Wager Checker
-
 // Insert
 bool BetAVL::insert(betNodePtr &node, betNodePtr &betNode)
 {
@@ -255,6 +198,17 @@ bool BetAVL::insert(betNodePtr &node, betNodePtr &betNode)
 
     return true;
 }
+
+// Id checker
+bool BetAVL::sameID(const betNodePtr node, const betNodePtr betNode)
+{
+    if (node->getID() == betNode->getID())
+        return true;
+
+    return false;
+}
+
+// Wager Checker
 
 //-----------------------------------------------------------------------------------------
 // Traversal
@@ -443,7 +397,8 @@ bool BetAVL::insert(int wageType, int wage, int point)
     // TODO: Add checking functionality for valid winnings
 
     // Point automatically passes as 0 if no point provided
-    betNode = std::make_shared<BetNode>(wage, point);
+    auto it = this->BetTypes.find(wageType);
+    betNode = it->second(wage, point); // Get appropriate Object to insert
 
     while (!insert(this->root, betNode))      // Duplicate ID will return false
         betNode->setID(generateID(wageType)); // reset ID then loop again

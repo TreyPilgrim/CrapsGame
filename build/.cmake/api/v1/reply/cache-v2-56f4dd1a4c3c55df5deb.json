@@ -822,18 +822,6 @@
 			"value" : "C:/Program Files/CMake/share/cmake-3.30"
 		},
 		{
-			"name" : "CMAKE_RUNTIME_OUTPUT_DIRECTORY",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "No help, variable specified on the command line."
-				}
-			],
-			"type" : "UNINITIALIZED",
-			"value" : "../bin"
-		},
-		{
 			"name" : "CMAKE_SHARED_LINKER_FLAGS",
 			"properties" : 
 			[

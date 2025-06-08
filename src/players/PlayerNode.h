@@ -22,13 +22,14 @@ private:
     // Player's name
     string gamblerName;
 
+    // List of bets made - Learning point: Must INITIALIZE playerBets. cannot set to nullptr like the next/prev values
+    betAvlPtr playerBets;
+
+    int placeWager(int bal);
+
 public:
     playerNodePtr next;
     playerNodePtr prev;
-    // List of bets made
-    betAvlPtr playerBets;
-
-    // Learning point: Must INITIALIZE playerBets. cannot set to nullptr like the next/prev values
 
     // Constructors
     PlayerNode() : next{nullptr},
@@ -38,25 +39,25 @@ public:
                    gamblerName{"Default"},
                    playerBets{std::make_shared<BetAVL>()}
     {
+        this->setName("Default");
     }
 
     PlayerNode(string name) : next{nullptr},
                               prev{nullptr},
                               shooter{false},
                               balance{0},
-                              gamblerName{name},
                               playerBets{std::make_shared<BetAVL>()}
     {
+        this->setName(name);
     }
 
     PlayerNode(string name, int &balance) : next{nullptr},
                                             prev{nullptr},
                                             shooter{false},
-                                            balance{0},
-                                            gamblerName{name},
                                             playerBets{std::make_shared<BetAVL>()}
     {
-        this->balance = std::move(balance);
+        this->setBalance(balance);
+        this->setName(name);
         std::cout << "Player " << getName() << " with the balance of $" << getBalance() << " has been created\n";
     }
 
@@ -72,4 +73,10 @@ public:
     bool setName(string name);
     void setBalance(int money);
     void newShooter();
+
+    // Round Options - Public Version
+    void placeWager();      // BetList
+    void viewBets();        // BetList
+    void removeBet();       // BetList
+    void addFunds(int add); // Self
 };

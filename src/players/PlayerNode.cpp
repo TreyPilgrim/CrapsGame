@@ -1,4 +1,13 @@
 #include "PlayerNode.h"
+//-----------------------------------------------------------------------------------------
+// Private Functions
+
+int PlayerNode::placeWager(int bal)
+{
+    // Create function - BetList.h
+    // return this->playerBets->placeWager(bal);
+    return 0;
+}
 
 //-----------------------------------------------------------------------------------------
 // Checkers
@@ -55,4 +64,23 @@ void PlayerNode::newShooter()
         this->shooter = false;
     else
         this->shooter = true;
+}
+
+//-----------------------------------------------------------------------------------------
+// Game Logic
+
+void PlayerNode::placeWager()
+{
+    this->setBalance(this->placeWager(this->getBalance()));
+}
+
+void PlayerNode::viewBets()
+{
+    // Call BetListFunction -- BetList.h
+    // this->playerBets->viewBets();
+}
+
+void PlayerNode::removeBet()
+{
+    this->playerBets->remove();
 }

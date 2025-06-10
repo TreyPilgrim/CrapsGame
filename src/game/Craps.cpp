@@ -4,6 +4,16 @@
     Private Functions
 */
 
+// Fail Safe
+void Craps::failIf(int condition, const std::string &errorMsg)
+{
+    if (condition == -1)
+    {
+        std::cerr << "Error: " << errorMsg << std::endl;
+        std::exit(EXIT_FAILURE);
+    }
+}
+
 //-----------------------------------------------------------------------------------------
 // Menu Functions
 
@@ -15,6 +25,8 @@ void Craps::welcome()
     std::cout << std::endl;
 
     std::cout << "I'm Trey, and I'll be your dealer" << std::endl;
+    std::cout << "The table's minimum wager is $" << this->minWager << std::endl;
+    std::cout << "If you don't know how to play, it's never too late to open Google..." << std::endl;
 }
 
 // Betting Phase Display
@@ -59,18 +71,17 @@ void Craps::displayNewRound(bool comeOutRoll) // Pass Bet & Don't Pass Bet
         std::cout << "19. Ace Deuce Bet" << std::endl;
         std::cout << "20. Snake Eyes Bet" << std::endl;
         std::cout << "21. Box Cars Bet" << std::endl;
-        std::cout << "22. Craps And Eleven Bet" << std::endl;
-        std::cout << "23. Whirl Bet" << std::endl;
-        std::cout << "24. Horn Bet" << std::endl;
-        std::cout << "25. Horn High Bet " << std::endl;
-        std::cout << "26. All Small Bet" << std::endl;
-        std::cout << "27. All Tall Bet" << std::endl;
+        std::cout << "22. Whirl Bet" << std::endl;
+        std::cout << "23. Horn Bet" << std::endl;
+        std::cout << "24. Horn High Bet " << std::endl;
+        std::cout << "25. All Small Bet" << std::endl;
+        std::cout << "26. All Tall Bet" << std::endl;
 
         // Multi-Roll Proposition Bets
         std::cout << "\n------------------------------------------------" << std::endl;
         std::cout << "Multi-Roll Proposition Bets" << std::endl;
-        std::cout << "28. Hardways Bet" << std::endl;
-        std::cout << "29. Fire Bet" << std::endl;
+        std::cout << "27. Hardways Bet" << std::endl;
+        std::cout << "28. Fire Bet" << std::endl;
 
         std::cout << "\n------------------------------------------------" << std::endl;
         std::cout << "a. View Bets" << std::endl;
@@ -112,18 +123,17 @@ void Craps::displayNewRound(bool comeOutRoll) // Pass Bet & Don't Pass Bet
         std::cout << "19. Ace Deuce Bet" << std::endl;
         std::cout << "20. Snake Eyes Bet" << std::endl;
         std::cout << "21. Box Cars Bet" << std::endl;
-        std::cout << "22. Craps And Eleven Bet" << std::endl;
-        std::cout << "23. Whirl Bet" << std::endl;
-        std::cout << "24. Horn Bet" << std::endl;
-        std::cout << "25. Horn High Bet " << std::endl;
-        std::cout << "26. All Small Bet" << std::endl;
-        std::cout << "27. All Tall Bet" << std::endl;
+        std::cout << "22. Whirl Bet" << std::endl;
+        std::cout << "23. Horn Bet" << std::endl;
+        std::cout << "24. Horn High Bet " << std::endl;
+        std::cout << "25. All Small Bet" << std::endl;
+        std::cout << "26. All Tall Bet" << std::endl;
 
         // Multi-Roll Proposition Bets
         std::cout << "\n------------------------------------------------" << std::endl;
         std::cout << "Multi-Roll Proposition Bets" << std::endl;
-        std::cout << "28. Hardways Bet" << std::endl;
-        std::cout << "29. Fire Bet" << std::endl;
+        std::cout << "27. Hardways Bet" << std::endl;
+        std::cout << "28. Fire Bet" << std::endl;
 
         std::cout << "\n------------------------------------------------" << std::endl;
         std::cout << "a. View Bets" << std::endl;
@@ -181,6 +191,8 @@ void Craps::setP1()
 
     std::cout << "What will be your better's name? " << std::endl;
     std::cin >> player1;
+
+    // Search For if name is Unique
 
     while (p1Balance <= minWager)
     {

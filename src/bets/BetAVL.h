@@ -11,6 +11,8 @@ class BetAVL;
 class BetAVL
 {
 private:
+  int balance{0};
+
   std::map<int, std::function<std::shared_ptr<BetNode>(int, int)>> BetTypes = {
       {1, [](int wage, int)
        { return std::make_shared<PassLineBet>(wage); }},

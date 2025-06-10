@@ -74,9 +74,9 @@ public:
     void setBalance(int money);
     void newShooter();
 
-    // Round Options - Public Version
-    void placeWager();      // BetList
-    void viewBets();        // BetList
-    void removeBet();       // BetList
-    void addFunds(int add); // Self
+    // Round Choices Operations
+    void placeWager(); // betAVL - needs balance [1st]
+    void viewBets();   // betAVL - [2nd]
+    void removeBet();  // betAVL - needs balance [3rd]
+    void addFunds();   // betAVL - needs balance [4th]
 };

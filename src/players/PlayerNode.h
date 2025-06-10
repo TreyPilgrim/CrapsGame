@@ -72,4 +72,10 @@ public:
     bool setName(string name);
     void setBalance(int money);
     void newShooter();
+
+    // Round Choices Operations
+    void placeWager(); // betAVL - needs balance [1st]
+    void viewBets();   // betAVL - [2nd]
+    void removeBet();  // betAVL - needs balance [3rd]
+    void addFunds();   // betAVL - needs balance [4th]
 };

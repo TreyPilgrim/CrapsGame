@@ -1,8 +1,5 @@
 #pragma once
-#include <iostream>
-#include <memory>
 #include "PlayerNode.h"
-#include <string>
 
 class PlayerList
 {
@@ -11,8 +8,11 @@ private:
     playerNodePtr tail;
     playerNodePtr shooter;
 
-    bool validName(const string name);
     bool isEmpty();
+
+    // Unique Name finder
+    bool sameName(const string name1, const string name2);
+    bool sameNameFromNode(const string userName, playerNodePtr comparison);
 
 public:
     PlayerList() : head{nullptr}, tail{nullptr}, shooter{nullptr} {}
@@ -36,4 +36,7 @@ public:
     void displaySelf();
 
     void comeOutWin();
+
+    // Public Unique Name alg.
+    bool uniqueName(const string userName);
 };

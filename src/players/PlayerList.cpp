@@ -3,20 +3,6 @@
 /*-----------------------------------------------------
     PlayerList PRIVATE Functions
 -------------------------------------------------------*/
-bool PlayerList::validName(const string name)
-{
-    std::cout << "validName func\n";
-    playerNodePtr tmp = nullptr;
-    tmp = find(name);
-    std::cout << "name not found\n";
-
-    // Return false if name was found
-    if (tmp != nullptr)
-        return false;
-
-    std::cout << "return true\n";
-    return true;
-}
 
 bool PlayerList::isEmpty()
 {
@@ -24,6 +10,18 @@ bool PlayerList::isEmpty()
         return true;
 
     return false;
+}
+
+// string comparison for same name
+bool PlayerList::sameName(const string name1, const string name2)
+{
+    return (name1 != name2) ? false : true;
+}
+
+// calling sameName using getName for node-name passing
+bool PlayerList::sameNameFromNode(const string userName, playerNodePtr comparison)
+{
+    return this->sameName(userName, comparison->getName());
 }
 
 /*-----------------------------------------------------
@@ -36,7 +34,7 @@ bool PlayerList::isEmpty()
 bool PlayerList::pushPlayer(string name, int &playerBalance)
 {
     // Make sure name is unique
-    if (!this->validName(name))
+    if (!this->uniqueName(name))
         return false;
 
     std::cout << "name is valid\n";
@@ -71,7 +69,7 @@ bool PlayerList::pushWager(std::string name, int wageType, int wage)
         return false;
 
     // Push the Bet into the List
-    tmp->playerBets->insert(wageType, wage);
+    // tmp->playerBets->insert(wageType, wage);
 
     // Update the balance to show the funds are now on the boards
     tmp->setBalance(-wage);
@@ -185,4 +183,28 @@ void PlayerList::displaySelf()
 
     std::cout << "Player Name: " << tmp->getName() << std::endl;
     std::cout << "Player Balance: " << tmp->getBalance() << std::endl;
+}
+
+// Public Unique Name Checker function
+bool PlayerList::uniqueName(const string userName)
+{
+
+    if (this->isEmpty())
+    {
+        std::cout << "Empty list" << std::endl;
+        return false;
+    }
+
+    bool uniqueName{true};
+    playerNodePtr tmp = this->head;
+
+    while (tmp != nullptr && uniqueName == true)
+    {
+        // sameName returns false on unique entries
+        uniqueName = !this->sameNameFromNode(userName, tmp);
+
+        tmp = tmp->next;
+    }
+
+    return uniqueName;
 }

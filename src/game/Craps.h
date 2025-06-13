@@ -1,3 +1,4 @@
+#include <cstdlib> // exit()
 #include <string>
 #include <list>
 #include <memory>
@@ -24,6 +25,9 @@ private:
     /*
         Private Functions
     */
+
+    // Fail Safe
+    void failIf(const std::string &errorMSG, int condition = -1);
 
     // Menu Functions
     // TODO: Welcome Screen

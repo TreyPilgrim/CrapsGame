@@ -1,8 +1,5 @@
 #pragma once
-#include <iostream>
-#include <memory>
 #include "PlayerNode.h"
-#include <string>
 
 class PlayerList
 {
@@ -11,8 +8,12 @@ private:
     playerNodePtr tail;
     playerNodePtr shooter;
 
-    bool validName(const string name);
     bool isEmpty();
+    playerNodePtr find(const std::string name); // find a specific node - by name, return it (brute force as of now)
+
+    // Unique Name finder
+    bool sameName(const string name1, const string name2);
+    bool sameNameFromNode(const string userName, playerNodePtr comparison);
 
 public:
     PlayerList() : head{nullptr}, tail{nullptr}, shooter{nullptr} {}
@@ -28,12 +29,14 @@ public:
     bool setShooter();
     bool p1Shooter();
 
-    playerNodePtr find(const std::string name); // find a specific node, return it (brute force as of now)
-    bool pop(std::string name);                 // remove node via name
-    std::string peek();                         // peek at the head node's name
+    bool pop(std::string name); // remove node via name
+    std::string peek();         // peek at the head node's name
 
     void displayPlayers();
     void displaySelf();
 
     void comeOutWin();
+
+    // Public Unique Name alg.
+    bool uniqueName(const string userName);
 };

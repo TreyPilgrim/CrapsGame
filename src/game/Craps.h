@@ -27,7 +27,7 @@ private:
     */
 
     // Fail Safe
-    void failIf(int condition, const std::string &errorMSG);
+    void failIf(const std::string &errorMSG, int condition = -1);
 
     // Menu Functions
     // TODO: Welcome Screen

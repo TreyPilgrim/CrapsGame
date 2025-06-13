@@ -5,7 +5,7 @@
 */
 
 // Fail Safe
-void Craps::failIf(int condition, const std::string &errorMsg)
+void Craps::failIf(const std::string &errorMsg, int condition)
 {
     if (condition == -1)
     {
@@ -150,6 +150,9 @@ void Craps::displayNewRound(bool comeOutRoll) // Pass Bet & Don't Pass Bet
 */
 std::string Craps::inputType(const std::string &userInput)
 {
+    if (userInput.size() != 1)
+        return "Invalid";
+
     bool isInt{false};
 
     for (int i{0}; i < userInput.size(); i++)
@@ -161,13 +164,7 @@ std::string Craps::inputType(const std::string &userInput)
             isInt = true;
     }
 
-    if (isInt)
-        return "Integer";
-
-    if (userInput.size() != 1)
-        return "Invalid";
-
-    return "Char";
+    return (isInt) ? "Integer" : "Char";
 }
 
 // 4/5/25 - check on status of this
@@ -193,13 +190,14 @@ void Craps::setP1()
     std::cin >> player1;
 
     // Search For if name is Unique
+    (this->Gamblers->uniqueName(player1)) ? this->failIf("craps::setP1 - Valid Name", 0) : this->failIf("Craps::setP1 - name is not unique");
 
     while (p1Balance <= minWager)
     {
         std::cout << "What will be your starting balance ($" << minWager << "+)? " << std::endl;
-        if (std::cin >> p1Balance)
+        if (std::cin >> p1Balance) // make sure it does not change floats to ints
             continue;
-        else
+        else // Non-Number Entry
         {
             std::cout << "Invalid input. Please enter whole numbers\n";
 
@@ -214,7 +212,7 @@ void Craps::setP1()
         }
     }
 
-    std::cout << p1Balance << " will be your starting balance" << std::endl;
+    std::cout << "$" << p1Balance << " will be your starting balance" << std::endl;
 
     while (!Gamblers->pushPlayer(player1, p1Balance))
     {

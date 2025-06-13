@@ -9,6 +9,7 @@ private:
     playerNodePtr shooter;
 
     bool isEmpty();
+    playerNodePtr find(const std::string name); // find a specific node - by name, return it (brute force as of now)
 
     // Unique Name finder
     bool sameName(const string name1, const string name2);
@@ -28,9 +29,8 @@ public:
     bool setShooter();
     bool p1Shooter();
 
-    playerNodePtr find(const std::string name); // find a specific node, return it (brute force as of now)
-    bool pop(std::string name);                 // remove node via name
-    std::string peek();                         // peek at the head node's name
+    bool pop(std::string name); // remove node via name
+    std::string peek();         // peek at the head node's name
 
     void displayPlayers();
     void displaySelf();

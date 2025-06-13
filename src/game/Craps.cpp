@@ -30,7 +30,7 @@ void Craps::welcome()
 }
 
 // Betting Phase Display
-void Craps::displayNewRound(bool comeOutRoll) // Pass Bet & Don't Pass Bet
+void Craps::placeWagerOptions(bool comeOutRoll) // Pass Bet & Don't Pass Bet
 {
 
     /*
@@ -143,6 +143,90 @@ void Craps::displayNewRound(bool comeOutRoll) // Pass Bet & Don't Pass Bet
         std::cout << "q. Quit" << std::endl;
         std::cout << "z. Roll" << std::endl;
     }
+}
+
+void Craps::roundChoices()
+{
+    /*
+        - Place Wager
+        - View Bet
+        - Remove Bet
+        - Add Funds
+    */
+
+    int userInput{0};
+
+    this->roundChoicesDisplay();
+
+    while (userInput > 4 || userInput < 1)
+    {
+        if (std::cin >> userInput) // make sure it does not change floats to ints
+            continue;
+        else // Non-Number Entry
+        {
+            std::cout << "Invalid input. Please enter 1-4\n";
+
+            // Clear error flag on cin
+            std::cin.clear();
+
+            // Discard invalid input
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+            // assign userInput to invalid value to continue loop
+            userInput = 0;
+        }
+    }
+
+    switch (userInput)
+    {
+    case '1':
+        this->placeWager();
+        break;
+
+    case '2':
+        this->viewBets();
+        break;
+
+    case '3':
+        this->removeBets();
+        break;
+
+    case '4':
+        this->addFunds();
+        break;
+
+    default:
+        this->failIf("Craps::roundChoices - Invalid input for choices");
+    }
+
+    // Check for valid balance before displaying screen
+    this->roundChoicesDisplay();
+}
+
+void Craps::roundChoicesDisplay()
+{
+    std::cout << "\nRound Choices \n------------------------------------------------" << std::endl;
+    std::cout << "1. Place Wager" << std::endl;
+    std::cout << "2. View Bets" << std::endl;
+    std::cout << "3. Remove Bets" << std::endl;
+    std::cout << "4. Add Funds" << std::endl;
+    // std::cout << "q. Quit" << std::endl;
+}
+
+void Craps::placeWager()
+{
+}
+
+void Craps::viewBets()
+{
+}
+
+void Craps::removeBets()
+{
+}
+
+void Craps::addFunds()
+{
 }
 
 /*

@@ -2,10 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "bin/RelWithDebInfo/CrapsGame.exe"
+			"path" : "bin/Release/CrapsGame.exe"
 		},
 		{
-			"path" : "bin/RelWithDebInfo/CrapsGame.pdb"
+			"path" : "bin/Release/CrapsGame.pdb"
 		}
 	],
 	"backtrace" : 1,
@@ -45,7 +45,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "/DWIN32 /D_WINDOWS /EHsc /O2 /Ob1 /DNDEBUG -std:c++17 -MD -Zi"
+					"fragment" : "/DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG -std:c++17 -MD"
 				}
 			],
 			"includes" : 
@@ -88,7 +88,8 @@
 				3,
 				4,
 				5,
-				6
+				6,
+				7
 			]
 		}
 	],
@@ -104,11 +105,11 @@
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "/DWIN32 /D_WINDOWS /EHsc /O2 /Ob1 /DNDEBUG -MD -Zi",
+				"fragment" : "/DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG -MD",
 				"role" : "flags"
 			},
 			{
-				"fragment" : "/machine:x64 /debug /INCREMENTAL /subsystem:console",
+				"fragment" : "/machine:x64 /INCREMENTAL:NO /subsystem:console",
 				"role" : "flags"
 			},
 			{
@@ -137,7 +138,8 @@
 				3,
 				4,
 				5,
-				6
+				6,
+				7
 			]
 		}
 	],
@@ -183,6 +185,12 @@
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
 			"path" : "src/utils/Dice.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/utils/Tokenizer.cpp",
 			"sourceGroupIndex" : 0
 		}
 	],

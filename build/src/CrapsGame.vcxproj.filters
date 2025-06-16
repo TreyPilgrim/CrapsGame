@@ -22,6 +22,9 @@
     <ClCompile Include="C:\Users\treyf\Desktop\BootCamp\CrapsGame\src\utils\Dice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\treyf\Desktop\BootCamp\CrapsGame\src\utils\Tokenizer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Users\treyf\Desktop\BootCamp\CrapsGame\src\CMakeLists.txt" />

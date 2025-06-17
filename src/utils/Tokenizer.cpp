@@ -128,6 +128,20 @@ bool Tokenizer::readChar(char &val)
     return true;
 }
 
+bool Tokenizer::isDone()
+{
+    // Skip any trailing whitespace
+    char c;
+    while (ss >> std::ws && ss.peek() != EOF)
+    {
+        ss >> c;
+        if (!isspace(c))
+            return false;
+    }
+
+    return true;
+}
+
 void Tokenizer::rewind()
 {
     ss.seekg(0, ss.beg);

@@ -37,6 +37,7 @@ public:
     bool readDouble(double &val);
     bool readWord(string &val);
     bool readChar(char &val);
+    bool isDone(); // Clear rest of input stream in event of garbage data
 
     void rewind();
     void clear();

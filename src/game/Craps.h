@@ -7,12 +7,16 @@
 #include <limits>
 #include "players/PlayerList.h"
 #include "utils/Dice.h"
+#include "utils/Tokenizer.h"
 
 using dicePtr = std::shared_ptr<Dice>;
 using playerPtr = std::shared_ptr<PlayerList>;
 class Craps
 {
 private:
+    // Tokenizer
+    Tokenizer token;
+
     /*
         Private Attributes
     */

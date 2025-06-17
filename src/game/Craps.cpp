@@ -256,10 +256,21 @@ std::string Craps::inputType(const std::string &userInput)
 int Craps::getWager() // Applicable for Pass/Don'tPass and Come/DontCome
 {
     int wage = 0;
+    double checker{0.0};
     while (wage < 15)
     {
         std::cout << "How much would you like to wage? (Minimum Bets: $" << minWager << ")" << std::endl;
-        std::cin >> wage;
+
+        if (token.readDouble(checker))
+        {
+            std::cout << "We don't deal with coins, peasant..." << std::endl;
+            token.clear();
+            continue;
+        }
+
+        if (!token.readInt(wage))
+        {
+        }
     }
 
     return wage;

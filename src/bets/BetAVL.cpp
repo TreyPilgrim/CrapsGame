@@ -398,7 +398,7 @@ bool BetAVL::insert(int wageType, int wage, int point)
 
     // Point automatically passes as 0 if no point provided
     auto it = this->BetTypes.find(wageType);
-    betNode = it->second(wage, point); // Get appropriate Object to insert
+    // betNode = it->second(wage, point); // Get appropriate Object to insert
 
     // Event of duplicate ID - TODO
     // while (!insert(this->root, betNode))      // Duplicate ID will return false

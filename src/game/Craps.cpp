@@ -30,7 +30,7 @@ void Craps::welcome()
 }
 
 // Betting Phase Display
-void Craps::placeWagerOptions(bool comeOutRoll) // Pass Bet & Don't Pass Bet
+void Craps::placeWagerOptions() // Pass Bet & Don't Pass Bet
 {
 
     /*
@@ -44,7 +44,7 @@ void Craps::placeWagerOptions(bool comeOutRoll) // Pass Bet & Don't Pass Bet
 
     std::cout << "PLACE YOUR BETS!! (Case Sensitive)" << std::endl;
 
-    if (comeOutRoll) // Only Pass or Don't Pass bets
+    if (this->comeOutRoll) // Only Pass or Don't Pass bets
     {
 
         // Come out roll
@@ -89,7 +89,8 @@ void Craps::placeWagerOptions(bool comeOutRoll) // Pass Bet & Don't Pass Bet
         std::cout << "c. Add Funds" << std::endl;
         std::cout << "Finished Betting?" << std::endl;
         std::cout << "q. Quit" << std::endl;
-        std::cout << "z. Roll" << std::endl;
+        std::cout << "r. Roll" << std::endl;
+        std::cout << "z. Return to Round Choices Menu" << std::endl;
     }
     else // Can't do pass/dontPass bets
     {
@@ -141,39 +142,34 @@ void Craps::placeWagerOptions(bool comeOutRoll) // Pass Bet & Don't Pass Bet
         std::cout << "c. Add Funds" << std::endl;
         std::cout << "Finished Betting?" << std::endl;
         std::cout << "q. Quit" << std::endl;
-        std::cout << "z. Roll" << std::endl;
+        std::cout << "r. Roll" << std::endl;
+        std::cout << "z. Return to Round Choices Menu" << std::endl;
     }
 }
 
 void Craps::roundChoices()
 {
+    int userInput{0};
+    char charInput{'t'};
     /*
         - Place Wager
         - View Bet
         - Remove Bet
         - Add Funds
     */
-
-    int userInput{0};
-
     this->roundChoicesDisplay();
 
-    while (userInput > 4 || userInput < 1)
+    while ((userInput > 4 || userInput < 1) && charInput != 'q')
     {
-        if (std::cin >> userInput) // make sure it does not change floats to ints
-            continue;
-        else // Non-Number Entry
+        if (!token.readInt(userInput))
         {
-            std::cout << "Invalid input. Please enter 1-4\n";
+            if (!token.readChar(charInput))
+                return this->failIf("Craps::roundChoices - invalid input?");
 
-            // Clear error flag on cin
-            std::cin.clear();
+            if (charInput != 'q')
+                std::cout << "Invalid option" << std::endl;
 
-            // Discard invalid input
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-            // assign userInput to invalid value to continue loop
-            userInput = 0;
+            token.isDone();
         }
     }
 
@@ -196,11 +192,9 @@ void Craps::roundChoices()
         break;
 
     default:
-        this->failIf("Craps::roundChoices - Invalid input for choices");
+        this->quit();
+        break;
     }
-
-    // Check for valid balance before displaying screen
-    this->roundChoicesDisplay();
 }
 
 void Craps::roundChoicesDisplay()
@@ -210,11 +204,168 @@ void Craps::roundChoicesDisplay()
     std::cout << "2. View Bets" << std::endl;
     std::cout << "3. Remove Bets" << std::endl;
     std::cout << "4. Add Funds" << std::endl;
-    // std::cout << "q. Quit" << std::endl;
+    std::cout << "r. Roll" << std::endl;
+    std::cout << "q. Quit" << std::endl;
 }
 
 void Craps::placeWager()
 {
+    double dubInput{0.0};
+    int intInput{0};
+    char charInput{'t'};
+    bool placeWage{true};
+
+    while (placeWage)
+    {
+        this->placeWagerOptions();
+
+        if (token.readDouble(dubInput))
+        {
+            std::cout << "Invalid input..." << std::endl;
+            token.isDone();
+            continue;
+        }
+
+        if (!token.readInt(intInput))
+        {
+            token.readChar(charInput);
+
+            switch (charInput)
+            {
+            case 'a':
+                this->viewBets();
+                break;
+
+            case 'b':
+                this->removeBets();
+                break;
+
+            case 'c':
+                this->addFunds();
+                break;
+
+            case 'q':
+                this->quit();
+                break;
+
+            case 'r':
+                this->dice->rollDice();
+                break;
+
+            case 'z':
+                token.isDone();
+                return;
+                break;
+
+            default:
+                std::cout << "Invalid Input..." << std::endl;
+                charInput = 't';
+                token.isDone();
+                continue;
+            }
+
+            token.isDone();
+            placeWage = false;
+        }
+        else
+        {
+            this->pushWager(intInput);
+            switch (intInput)
+            {
+            case 1:
+                break;
+
+            case 2:
+                break;
+
+            case 3:
+                break;
+
+            case 4:
+                break;
+
+            case 5:
+                break;
+
+            case 6:
+                break;
+
+            case 7:
+                break;
+
+            case 8:
+                break;
+
+            case 9:
+                break;
+
+            case 10:
+                break;
+
+            case 11:
+                break;
+
+            case 12:
+                break;
+
+            case 13:
+                break;
+
+            case 14:
+                break;
+
+            case 15:
+                break;
+
+            case 16:
+                break;
+
+            case 17:
+                break;
+
+            case 18:
+                break;
+
+            case 19:
+                break;
+
+            case 20:
+                break;
+
+            case 21:
+                break;
+
+            case 22:
+                break;
+
+            case 23:
+                break;
+
+            case 24:
+                break;
+
+            case 25:
+                break;
+
+            case 26:
+                break;
+
+            case 27:
+                break;
+
+            case 28:
+                break;
+            }
+        }
+    }
+}
+
+bool Craps::pushWager(const int &intInput)
+{
+    if (intInput < 1 || intInput > 28)
+        this->failIf("Craps::pushWager - Invalid Input");
+
+    return this->Gamblers->pushWagerP1Version(intInput);
 }
 
 void Craps::viewBets()
@@ -229,92 +380,66 @@ void Craps::addFunds()
 {
 }
 
-/*
-    Game Helper
-*/
-std::string Craps::inputType(const std::string &userInput)
+int Craps::getP1Balance()
 {
-    if (userInput.size() != 1)
-        return "Invalid";
+    int balance = 0;
+    double doubleChecker{0.0};
 
-    bool isInt{false};
-
-    for (int i{0}; i < userInput.size(); i++)
+    while (balance < minWager)
     {
-        if (!isdigit(userInput[i])) // if any input val is a char, break
-            break;
+        std::cout << "How much would you like your starting balance to be? (Minimum Bets: $" << minWager << ")" << std::endl;
 
-        if (isdigit(userInput[userInput.size() - 1])) // if the last char is a #, return true
-            isInt = true;
-    }
-
-    return (isInt) ? "Integer" : "Char";
-}
-
-// 4/5/25 - check on status of this
-// TODO: Add a checker to make sure funds are valid
-int Craps::getWager() // Applicable for Pass/Don'tPass and Come/DontCome
-{
-    int wage = 0;
-    double checker{0.0};
-    while (wage < 15)
-    {
-        std::cout << "How much would you like to wage? (Minimum Bets: $" << minWager << ")" << std::endl;
-
-        if (token.readDouble(checker))
+        // No betting with coins!
+        if (token.readDouble(doubleChecker))
         {
             std::cout << "We don't deal with coins, peasant..." << std::endl;
-            token.clear();
+            token.isDone();
             continue;
         }
 
-        if (!token.readInt(wage))
-        {
-        }
+        if (!token.readInt(balance))
+            std::cout << "Is this even money?? We will throw you out..." << std::endl;
+
+        if (balance < minWager)
+            std::cout << "Up the ante..." << std::endl;
+
+        token.isDone();
     }
 
-    return wage;
+    return balance;
+}
+
+std::string Craps::createUserName()
+{
+    std::string userName{"default"};
+
+    std::cout << "What will be your better's name? " << std::endl;
+    if (!this->token.readLine(userName))
+        this->failIf(("Craps::createUserName() - Invalid name input? (" + userName + ")"));
+
+    // Clear stream - done w/ it
+    this->token.isDone();
+    return userName;
 }
 
 void Craps::setP1()
 {
-    string player1 = "default"; // pass P1 name
-    int p1Balance = 0;          // P1 Balance
-
-    std::cout << "What will be your better's name? " << std::endl;
-    std::cin >> player1;
+    // Member initializers for PlayerList() for creation of P1
+    string player1 = this->createUserName();
+    int p1Balance = this->getP1Balance();
 
     // Search For if name is Unique
-    (this->Gamblers->uniqueName(player1)) ? this->failIf("craps::setP1 - Valid Name", 0) : this->failIf("Craps::setP1 - name is not unique");
-
-    while (p1Balance <= minWager)
+    while (!this->Gamblers->uniqueName(player1))
     {
-        std::cout << "What will be your starting balance ($" << minWager << "+)? " << std::endl;
-        if (std::cin >> p1Balance) // make sure it does not change floats to ints
-            continue;
-        else // Non-Number Entry
-        {
-            std::cout << "Invalid input. Please enter whole numbers\n";
-
-            // Clear error flag on cin
-            std::cin.clear();
-
-            // Discard invalid input
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-            // assign invalid value to p1Balance to continue loop
-            p1Balance = 0;
-        }
+        std::cout << "Sorry, that username has already been taken...\n"
+                  << std::endl;
+        player1 = this->createUserName();
     }
 
     std::cout << "$" << p1Balance << " will be your starting balance" << std::endl;
 
-    while (!Gamblers->pushPlayer(player1, p1Balance))
-    {
-        std::cout << "The name \"" << player1 << "\" is already in use by another player..." << std::endl;
-        std::cout << "Enter another player name\n";
-        std::cin >> player1;
-    }
+    if (!Gamblers->pushPlayer(player1, p1Balance))
+        this->failIf("Craps::setP1 - Unable to push P1");
 
     std::cout << "returning from setP1 func\n";
 }
@@ -324,7 +449,7 @@ void Craps::setP1()
 */
 
 // Main Game
-void Craps::play()
+void Craps::theGame()
 {
     welcome();
     setP1();

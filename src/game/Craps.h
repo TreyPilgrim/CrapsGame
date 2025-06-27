@@ -36,22 +36,25 @@ private:
     // Menu Functions
     // TODO: Welcome Screen
     void welcome();
-    void placeWagerOptions(bool comeOutRoll);
+    void placeWagerOptions();
     void roundChoices();
 
     // Round Choices - Helpers
     void roundChoicesDisplay();
+    //---------------------------------------
     void placeWager();
+    bool pushWager(const int &intInput);
+    //---------------------------------------
     void viewBets();
     void removeBets();
     void addFunds();
+    void quit();
 
-    // Game Helpers
-    std::string inputType(const std::string &userInput);
+    int getP1Balance();
+    std::string createUserName();
 
-    int getWager();
     void setP1();
 
 public:
-    void play();
+    void theGame();
 };

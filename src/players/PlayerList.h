@@ -8,6 +8,7 @@ private:
     playerNodePtr tail;
     playerNodePtr shooter;
 
+    void failIf(const std::string &errorMsg, int condition = -1);
     bool isEmpty();
     playerNodePtr find(const std::string name); // find a specific node - by name, return it (brute force as of now)
 
@@ -25,7 +26,8 @@ public:
     // Checker
     bool validWinAmount(char betType, int betAmount);
     bool pushPlayer(std::string name, int &playerBalance);
-    bool pushWager(std::string name, int wageType, int wage);
+    bool pushWagerP1Version(const int &wageType);
+    bool pushWagerP1Version(const int &wageType, const std::string &name);
     bool setShooter();
     bool p1Shooter();
 

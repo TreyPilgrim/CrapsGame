@@ -25,8 +25,6 @@ private:
     // List of bets made - Learning point: Must INITIALIZE playerBets. cannot set to nullptr like the next/prev values
     betAvlPtr playerBets;
 
-    int placeWager(int bal);
-
 public:
     playerNodePtr next;
     playerNodePtr prev;
@@ -75,8 +73,8 @@ public:
     void newShooter();
 
     // Round Choices Operations
-    void placeWager(); // betAVL - needs balance [1st]
-    void viewBets();   // betAVL - [2nd]
-    void removeBet();  // betAVL - needs balance [3rd]
-    void addFunds();   // betAVL - needs balance [4th]
+    void placeWager(int wageType); // betAVL - needs balance [1st]
+    void viewBets();               // betAVL - [2nd]
+    void removeBet();              // betAVL - needs balance [3rd]
+    void addFunds();               // betAVL - needs balance [4th]
 };

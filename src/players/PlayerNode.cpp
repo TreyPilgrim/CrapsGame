@@ -2,13 +2,6 @@
 //-----------------------------------------------------------------------------------------
 // Private Functions
 
-int PlayerNode::placeWager(int bal)
-{
-    // Create function - BetList.h
-    // return this->playerBets->placeWager(bal);
-    return 0;
-}
-
 //-----------------------------------------------------------------------------------------
 // Checkers
 bool PlayerNode::validFunds(int wage) const
@@ -69,9 +62,9 @@ void PlayerNode::newShooter()
 //-----------------------------------------------------------------------------------------
 // Game Logic
 
-void PlayerNode::placeWager()
+void PlayerNode::placeWager(int wageType)
 {
-    this->setBalance(this->placeWager(this->getBalance()));
+    this->setBalance(wageType);
 }
 
 void PlayerNode::viewBets()

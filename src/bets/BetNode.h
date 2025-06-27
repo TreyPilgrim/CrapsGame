@@ -277,11 +277,11 @@ private:
     int getSouthVal(int wage) override;
 
 public:
-    OddsOnPassBet(int point)
+    OddsOnPassBet()
     {
         std::cout << "Odds on Pass Bet Initialized: Default" << std::endl;
         this->generateNewID();
-        this->setPoint(point);
+        this->setPoint(5);
 
         this->setWage();
     }

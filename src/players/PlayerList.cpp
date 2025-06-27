@@ -3,6 +3,15 @@
 /*-----------------------------------------------------
     PlayerList PRIVATE Functions
 -------------------------------------------------------*/
+// Fail Safe
+void PlayerList::failIf(const std::string &errorMsg, int condition)
+{
+    if (condition == -1)
+    {
+        std::cerr << "Error: " << errorMsg << std::endl;
+        std::exit(EXIT_FAILURE);
+    }
+}
 
 bool PlayerList::isEmpty()
 {
@@ -33,11 +42,10 @@ bool PlayerList::sameNameFromNode(const string userName, playerNodePtr compariso
 // Add a new player to linked list
 bool PlayerList::pushPlayer(string name, int &playerBalance)
 {
-    // Make sure name is unique
     if (!this->uniqueName(name))
-        return false;
+        this->failIf("Name is not Unique");
 
-    std::cout << "name is valid\n";
+    std::cout << "PlayerList::PushPlayer - name is valid\n";
 
     // Push to tail
     playerNodePtr tmp = std::make_shared<PlayerNode>(name, playerBalance);
@@ -58,23 +66,18 @@ bool PlayerList::pushPlayer(string name, int &playerBalance)
 }
 
 // Pushing a wager
-bool PlayerList::pushWager(std::string name, int wageType, int wage)
+bool PlayerList::pushWagerP1Version(const int &wageType)
+{
+    return this->pushWagerP1Version(wageType, this->peek());
+}
+bool PlayerList::pushWagerP1Version(const int &wageType, const std::string &name)
 {
     playerNodePtr tmp = find(name);
 
     if (tmp == nullptr)
         return false; // Player not found
 
-    if (!tmp->validFunds(wage)) // Insuficient(?) funds
-        return false;
-
-    // Push the Bet into the List
-    // tmp->playerBets->insert(wageType, wage);
-
-    // Update the balance to show the funds are now on the boards
-    tmp->setBalance(-wage);
-
-    return true;
+    tmp->placeWager(wageType);
 }
 
 bool PlayerList::setShooter()
@@ -173,6 +176,9 @@ bool PlayerList::pop(string name)
 // Peek at the head node's name
 std::string PlayerList::peek()
 {
+    if (this->head == nullptr)
+        return "empty_list";
+
     return this->head->getName();
 }
 

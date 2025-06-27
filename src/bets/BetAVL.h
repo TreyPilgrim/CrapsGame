@@ -13,63 +13,63 @@ class BetAVL
 private:
   int balance{0};
 
-  std::map<int, std::function<std::shared_ptr<BetNode>(int, int)>> BetTypes = {
-      {1, [](int wage, int)
-       { return std::make_shared<PassLineBet>(wage); }},
-      {2, [](int wage, int)
-       { return std::make_shared<DontPassLineBet>(wage); }},
-      {3, [](int wage, int)
-       { return std::make_shared<ComeBet>(wage); }},
-      {4, [](int wage, int)
-       { return std::make_shared<DontComeBet>(wage); }},
-      {5, [](int wage, int point)
-       { return std::make_shared<OddsOnPassBet>(wage, point); }},
-      {6, [](int wage, int point)
-       { return std::make_shared<OddsOnDontPassBet>(wage, point); }},
-      {7, [](int wage, int point)
-       { return std::make_shared<OddsOnComeBet>(wage, point); }},
-      {8, [](int wage, int point)
-       { return std::make_shared<OddsOnDontComeBet>(wage, point); }},
-      {9, [](int wage, int point)
-       { return std::make_shared<PlaceToWinBet>(wage, point); }},
-      {10, [](int wage, int point)
-       { return std::make_shared<PlaceToLoseBet>(wage, point); }},
-      {11, [](int wage, int point)
-       { return std::make_shared<BuyBet>(wage, point); }},
-      {12, [](int wage, int point)
-       { return std::make_shared<LayBet>(wage, point); }},
-      {13, [](int wage, int)
-       { return std::make_shared<Big6Bet>(wage); }},
-      {14, [](int wage, int)
-       { return std::make_shared<Big8Bet>(wage); }},
-      {15, [](int wage, int)
-       { return std::make_shared<FieldBet>(wage); }},
-      {16, [](int wage, int)
-       { return std::make_shared<AnyCrapsBet>(wage); }},
-      {17, [](int wage, int)
-       { return std::make_shared<AnySevenBet>(wage); }},
-      {18, [](int wage, int)
-       { return std::make_shared<YoBet>(wage); }},
-      {19, [](int wage, int)
-       { return std::make_shared<AceDeuceBet>(wage); }},
-      {20, [](int wage, int)
-       { return std::make_shared<SnakeEyesBet>(wage); }},
-      {21, [](int wage, int)
-       { return std::make_shared<BoxCarsBet>(wage); }},
-      {22, [](int wage, int)
-       { return std::make_shared<WorldBet>(wage); }},
-      {23, [](int wage, int)
-       { return std::make_shared<HornBet>(wage); }},
-      {24, [](int wage, int highNum)
-       { return std::make_shared<HornHighBet>(wage, highNum); }},
-      {25, [](int wage, int)
-       { return std::make_shared<AllSmallBet>(wage); }},
-      {26, [](int wage, int)
-       { return std::make_shared<AllTallBet>(wage); }},
-      {27, [](int wage, int point)
-       { return std::make_shared<HardwayBet>(wage, point); }},
-      {28, [](int wage, int)
-       { return std::make_shared<FireBet>(wage); }}
+  std::map<int, std::function<std::shared_ptr<BetNode>()>> BetTypes = {
+      {1, []()
+       { return std::make_shared<PassLineBet>(); }},
+      {2, []()
+       { return std::make_shared<DontPassLineBet>(); }},
+      {3, []()
+       { return std::make_shared<ComeBet>(); }},
+      {4, []()
+       { return std::make_shared<DontComeBet>(); }},
+      {5, []()
+       { return std::make_shared<OddsOnPassBet>(); }},
+      {6, []()
+       { return std::make_shared<OddsOnDontPassBet>(); }},
+      {7, []()
+       { return std::make_shared<OddsOnComeBet>(); }},
+      {8, []()
+       { return std::make_shared<OddsOnDontComeBet>(); }},
+      {9, []()
+       { return std::make_shared<PlaceToWinBet>(); }},
+      {10, []()
+       { return std::make_shared<PlaceToLoseBet>(); }},
+      {11, []()
+       { return std::make_shared<BuyBet>(); }},
+      {12, []()
+       { return std::make_shared<LayBet>(); }},
+      {13, []()
+       { return std::make_shared<Big6Bet>(); }},
+      {14, []()
+       { return std::make_shared<Big8Bet>(); }},
+      {15, []()
+       { return std::make_shared<FieldBet>(); }},
+      {16, []()
+       { return std::make_shared<AnyCrapsBet>(); }},
+      {17, []()
+       { return std::make_shared<AnySevenBet>(); }},
+      {18, []()
+       { return std::make_shared<YoBet>(); }},
+      {19, []()
+       { return std::make_shared<AceDeuceBet>(); }},
+      {20, []()
+       { return std::make_shared<SnakeEyesBet>(); }},
+      {21, []()
+       { return std::make_shared<BoxCarsBet>(); }},
+      {22, []()
+       { return std::make_shared<WorldBet>(); }},
+      {23, []()
+       { return std::make_shared<HornBet>(); }},
+      {24, []()
+       { return std::make_shared<HornHighBet>(); }},
+      {25, []()
+       { return std::make_shared<AllSmallBet>(); }},
+      {26, []()
+       { return std::make_shared<AllTallBet>(); }},
+      {27, []()
+       { return std::make_shared<HardwayBet>(); }},
+      {28, []()
+       { return std::make_shared<FireBet>(); }}
 
   };
 
@@ -150,6 +150,8 @@ private:
 public:
   // Constructor
   BetAVL() = default;
+  BetAVL(int balance) : balance{balance} {}
+
   // Destructor
   ~BetAVL() = default;
 

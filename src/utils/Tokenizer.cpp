@@ -23,6 +23,14 @@ bool Tokenizer::readLine(string &line)
 
 bool Tokenizer::readInt(int &val)
 {
+
+    double temp{0.0};
+    if (this->readDouble(temp)) // Ensure no double is passed
+    {
+        ss.unget();
+        return false;
+    }
+
     if (isEmpty())
         return false;
 
@@ -138,6 +146,8 @@ bool Tokenizer::isDone()
         if (!isspace(c))
             return false;
     }
+
+    this->clear();
 
     return true;
 }

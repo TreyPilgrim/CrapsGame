@@ -12,6 +12,6 @@ int main()
 
     Craps TripleH;
 
-    TripleH.play();
+    TripleH.theGame();
     return 0;
 }

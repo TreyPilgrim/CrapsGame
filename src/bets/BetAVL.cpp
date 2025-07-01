@@ -389,6 +389,14 @@ int BetAVL::settleLists(std::list<int> &winLoseList, int whichList)
     Public Functions
 *********************************************************************/
 
+void BetAVL::generateNewBet(int wageType)
+{
+    auto it = BetTypes.find(wageType);
+    betNodePtr tmp = it->second(); // needs () because the second value is a function
+
+    // TODO: Update Insert to just take a node
+    // All other arithemetic should be handled there
+}
 // Insert
 bool BetAVL::insert(int wageType, int wage, int point)
 {

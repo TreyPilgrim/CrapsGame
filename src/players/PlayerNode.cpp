@@ -64,7 +64,7 @@ void PlayerNode::newShooter()
 
 void PlayerNode::placeWager(int wageType)
 {
-    this->setBalance(wageType);
+    this->playerBets->generateNewBet(wageType);
 }
 
 void PlayerNode::viewBets()

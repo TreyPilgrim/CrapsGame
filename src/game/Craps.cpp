@@ -266,96 +266,13 @@ void Craps::placeWager()
 
             token.isDone();
             placeWage = false;
+            continue;
         }
-        else
+
+        if (!this->pushWager(intInput))
         {
-            this->pushWager(intInput);
-            switch (intInput)
-            {
-            case 1:
-                break;
-
-            case 2:
-                break;
-
-            case 3:
-                break;
-
-            case 4:
-                break;
-
-            case 5:
-                break;
-
-            case 6:
-                break;
-
-            case 7:
-                break;
-
-            case 8:
-                break;
-
-            case 9:
-                break;
-
-            case 10:
-                break;
-
-            case 11:
-                break;
-
-            case 12:
-                break;
-
-            case 13:
-                break;
-
-            case 14:
-                break;
-
-            case 15:
-                break;
-
-            case 16:
-                break;
-
-            case 17:
-                break;
-
-            case 18:
-                break;
-
-            case 19:
-                break;
-
-            case 20:
-                break;
-
-            case 21:
-                break;
-
-            case 22:
-                break;
-
-            case 23:
-                break;
-
-            case 24:
-                break;
-
-            case 25:
-                break;
-
-            case 26:
-                break;
-
-            case 27:
-                break;
-
-            case 28:
-                break;
-            }
+            std::cout << "Invalid input..." << std::endl;
+            continue;
         }
     }
 }
@@ -363,7 +280,7 @@ void Craps::placeWager()
 bool Craps::pushWager(const int &intInput)
 {
     if (intInput < 1 || intInput > 28)
-        this->failIf("Craps::pushWager - Invalid Input");
+        return false;
 
     return this->Gamblers->pushWagerP1Version(intInput);
 }

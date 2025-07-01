@@ -70,6 +70,7 @@ bool PlayerList::pushWagerP1Version(const int &wageType)
 {
     return this->pushWagerP1Version(wageType, this->peek());
 }
+
 bool PlayerList::pushWagerP1Version(const int &wageType, const std::string &name)
 {
     playerNodePtr tmp = find(name);

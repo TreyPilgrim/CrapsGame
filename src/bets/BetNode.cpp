@@ -20,6 +20,15 @@ int BetNode::randNum()
 /*
     Protected Functions
 */
+// Fail Safe
+void BetNode::failIf(const std::string &errorMsg, int condition)
+{
+    if (condition == -1)
+    {
+        std::cerr << "Error: " << errorMsg << std::endl;
+        std::exit(EXIT_FAILURE);
+    }
+}
 
 bool BetNode::validInt() // CHECK
 {
@@ -90,6 +99,32 @@ int BetNode::getSouthVal(int wage)
     return wage;
 }
 
+int BetNode::evaluateNextVal(const arr wageArr, const int &balance)
+{
+
+    // Error
+    (wageArr[0] == 0 && wageArr[1] == 0) ? this->failIf("BetNode::setTheWagePhase - check logging for getNextValues()") : (void)0; // (void)0 - do nothing
+
+    if (wageArr[0] > balance) // Too poor for a north
+    {
+        std::cout << "Broke-Boi, not enough bread to bet the next valid wager... \nConsider adding more wages, the ATM isn't too far from here..." << std::endl;
+
+        if (wageArr[1] == 0)
+        {
+            std::cout << "There smallest valid wager amount is less than the table's minimum ($" << MIN_WAGE << ")\nOnly option is to add more wages" << std::endl;
+
+            return 0;
+        }
+    }
+
+    if (wageArr[1] == 0) // No valid south above MIN_Wage
+    {
+        std::cout << wageArr[0] << " is the next valid wage amount... the next minimum value is below the minimum wager amount ($" << MIN_WAGE << ")\n"
+                  << std::endl;
+    }
+
+    return 1;
+}
 arr BetNode::getNextValues(const int wage)
 {
     arr tmp = std::shared_ptr<int[]>(new int[2]);
@@ -101,50 +136,43 @@ arr BetNode::getNextValues(const int wage)
 }
 
 // Make sure wage entered is >= MINBET
-int BetNode::setTheWagePhase()
+int BetNode::setTheWagePhase(const int balance)
 {
     int wage;
     bool validInt{false};
 
     while (!validInt)
     {
-        std::cout << "Enter a wage amount ($" << MIN_WAGE << "+): ";
-        std::cin >> wage;
+        std::cout << "Enter a wage amount ($" << MIN_WAGE << "+) - Enter 'q' to return to previous screen: ";
 
-        if (!this->validInt()) // Invalid Input
+        if (!this->token.readInt(wage))
         {
-            std::cout << "Invalid Input... Please enter an integer" << std::endl;
+            char emergency;
+            this->token.readChar(emergency);
+
+            if (emergency == 'q' || emergency == 'Q')
+            {
+                token.isDone();
+                return -1;
+            }
+
+            std::cout << "Invalid Input... Try again" << std::endl;
+            token.isDone();
             continue;
         }
         else if (wage < MIN_WAGE) // too small a wage
         {
             std::cout << "Invalid Input... Please enter a value greater than $" << MIN_WAGE << std::endl;
+            token.isDone();
             continue;
         }
         else if (!this->validPayout(wage)) // Virtual part - payout == whole number
         {
-            arr tmp;
-            tmp = this->getNextValues(wage);
+            if (this->evaluateNextVal(this->getNextValues(wage), balance) == 0)
+                return -1; // Too poor for any valid wage
 
-            if (tmp[0] == 0 && tmp[1] == 0) // no valid north nor south
-            {
-                throw std::runtime_error("ERROR BetNode::setTheWagePhase - check logging for getNextValues()");
-                return -1;
-            }
-            else if (tmp[1] == 0) // No valid south
-            {
-                std::cout << tmp[0] << " is the next valid wage amount... the next minimum value is below the minimum wager amount ($" << MIN_WAGE << ")\n"
-                          << std::endl;
-                continue;
-            }
-            else if (tmp[0] == 0) // no valid north
-            {
-                std::cout << "Broke-Boi, not enough bread to bet the next valid wager... \nHow about the previous valid wager ($" << tmp[1] << ")?" << std::endl;
-                continue;
-            }
-
-            throw std::runtime_error("BETNODE::setTheWagePhase -- unknown condition\n");
-            return -1;
+            token.isDone();
+            continue;
         }
 
         validInt = true;
@@ -226,17 +254,14 @@ void BetNode::setPoint(int point)
     this->point = std::move(point);
 }
 
-// Wager - and helpers related
-void BetNode::setWage()
+// Set the wager
+void BetNode::setWage(const int balance)
 
 {
     if (this->payoutOdds.empty())
-    {
-        std::cout << "Default payout odds initialized: BetNode\n"
-                  << std::endl;
-        return;
-    }
-    this->wager = std::move(this->setTheWagePhase());
+        this->failIf("Default payout odds initialized: BetNode\n");
+
+    this->wager = std::move(this->setTheWagePhase(balance)); // -1 on canceled inputs
 }
 
 //-----------------------------------------------------------------------------------------

@@ -7,6 +7,7 @@
 #include <string>
 #include <list>
 #include <stdexcept>
+#include "Tokenizer.h"
 
 // BetNode CLass
 class BetNode;
@@ -35,15 +36,20 @@ private:
     int randNum();
 
 protected:
+    Tokenizer token;
     std::map<int, double> payoutOdds{};
+
+    // Fail safe
+    void failIf(const std::string &errorMsg, int condition = -1);
 
     // Wage Helpers - Set up to handle 1:1 payouts
     bool validInt();                          // Make sure input is an Int
     virtual bool validPayout(const int wage); // payout isn't a decimal
     virtual int getNorthVal(int wage);        // Get Next valid Wager amount
     virtual int getSouthVal(int wage);        // Get Previous valid Wager amount
-    arr getNextValues(const int wage);        // function that's going to return an array to next and prev valid wager amounts
-    int setTheWagePhase();                    // main function for getting wage information for node
+    int evaluateNextVal(arr wageArr, const int &balance);
+    arr getNextValues(const int wage);              // function that's going to return an array to next and prev valid wager amounts
+    virtual int setTheWagePhase(const int balance); // main function for getting wage information for node
 
     // ID Helpers
     arr randomArr();
@@ -79,14 +85,13 @@ public:
 
     // Initializer Functions
     void generateNewID();
-    virtual void setTheWager();
 
     // Setters
     void setID(std::string str);
     void setBF(int balFact);
     void setHeight(int h);
     void setPoint(int point);
-    void setWage(); // Set the wage -- after being thoroughly checked
+    void setWage(const int balance); // Set the wage -- after being thoroughly checked
 
     // Getters
     std::string getID();
@@ -105,6 +110,7 @@ class PassLineBet : public BetNode
 {
 private:
     bool firstRoll{true};
+    betNodePtr oddsOn{nullptr}; // Odds on Pass Line Bet
     std::map<int, double> payoutOdds{
         {7, 1.0},
         {11, 1.0}};
@@ -125,9 +131,14 @@ public:
     {
         std::cout << "Pass Line Bet Node Initialized: Default" << std::endl;
         this->generateNewID(); // Automatic
+    }
 
-        // User: Get Wager Amount
-        this->setWage();
+    PassLineBet(const int balance)
+    {
+        std::cout << "Pass Line Bet Node Initialized Starting balance passed" << std::endl;
+        this->generateNewID();
+
+        this->setWage(balance);
     }
 
     // Possible virutal function tbd
@@ -143,6 +154,7 @@ class DontPassLineBet : public BetNode
 {
 private:
     bool firstRoll{true};
+    betNodePtr oddsOn{nullptr}; // Odds on Don't Pass Line Bet
     std::map<int, double> payoutOdds{
         {2, 1.0},
         {3, 1.0},
@@ -162,8 +174,14 @@ public:
     {
         this->generateNewID();
         std::cout << "Dont Pass Line Bet Node Initialized: Default" << std::endl;
+    }
 
-        this->setWage();
+    DontPassLineBet(const int balance)
+    {
+        std::cout << "Dont Pass Line Bet Node Initialized: Balance passed" << std::endl;
+
+        this->generateNewID();
+        this->setWage(balance);
     }
 
     void notFirstRoll();
@@ -179,6 +197,7 @@ class ComeBet : public BetNode
 {
 private:
     bool firstRoll{true};
+    betNodePtr oddsOn{nullptr}; // Odds on Come Bet
     std::map<int, double> payoutOdds{
         {7, 1.0},
         {11, 1.0}};
@@ -197,7 +216,14 @@ public:
     {
         std::cout << "Come Bet Initialized: Default" << std::endl;
         this->generateNewID();
-        this->setWage();
+    }
+
+    ComeBet(const int balance)
+    {
+        std::cout << "Come Bet Initialized: Balance Passed" << std::endl;
+        this->generateNewID();
+
+        this->setWage(balance);
     }
 
     // Possible virutal function tbd
@@ -213,7 +239,7 @@ class DontComeBet : public BetNode
 {
 private:
     bool firstRoll{true};
-
+    betNodePtr oddsOn{nullptr}; // Odds on Don't Come Bet
     std::map<int, double> payoutOdds{
         {2, 1.0},
         {3, 1.0},
@@ -232,8 +258,16 @@ public:
     DontComeBet()
     {
         std::cout << "Don't Come Bet Initialized: Default" << std::endl;
+
         this->generateNewID();
-        this->setWage();
+    }
+
+    DontComeBet(const int balance)
+    {
+        std::cout << "Don't Come Bet Initialized: Balance Passed" << std::endl;
+
+        this->generateNewID();
+        this->setWage(balance);
     }
 
     void notFirstRoll();
@@ -282,8 +316,15 @@ public:
         std::cout << "Odds on Pass Bet Initialized: Default" << std::endl;
         this->generateNewID();
         this->setPoint(5);
+    }
 
-        this->setWage();
+    OddsOnPassBet(const int balance)
+    {
+        std::cout << "Odds on Pass Bet Initialized: Balance Passed" << std::endl;
+        this->generateNewID();
+        this->setPoint(5);
+
+        this->setWage(balance);
     }
 };
 
@@ -308,17 +349,17 @@ private:
     int getSouthVal(int wage) override;
 
 public:
-    OddsOnDontPassBet() : BetNode()
+    OddsOnDontPassBet()
     {
         std::cout << "Odds On Dont Pass Bet: Default" << std::endl;
         this->generateNewID();
     }
 
-    OddsOnDontPassBet(int wage, int point) : BetNode(wage, point)
+    OddsOnDontPassBet(const int balance)
     {
-        std::cout << "Odds On Dont Pass Bet\n"
-                  << std::endl;
+        std::cout << "Odds On Dont Pass Bet: Balance Passed" << std::endl;
         this->generateNewID();
+        this->setWage(balance);
     }
 };
 
@@ -343,17 +384,18 @@ private:
     int getSouthVal(int wage) override;
 
 public:
-    OddsOnComeBet() : BetNode()
+    OddsOnComeBet()
     {
         std::cout << "Odds On Come Bet Initialized: Default" << std::endl;
         this->generateNewID();
     }
 
-    OddsOnComeBet(int wage, int point) : BetNode(wage, point)
+    OddsOnComeBet(const int balance)
     {
-        std::cout << "Odds On Come Bet Initialized\n"
-                  << std::endl;
+        std::cout << "Odds On Come Bet Initialized: Balance Passed" << std::endl;
+
         this->generateNewID();
+        this->setWage(balance);
     }
 };
 
@@ -385,11 +427,13 @@ public:
         this->generateNewID();
     }
 
-    OddsOnDontComeBet(int wage, int point) : BetNode(wage, point)
+    OddsOnDontComeBet(const int balance)
     {
-        std::cout << "Odds On Dont Come Bet Initialized\n"
+        std::cout << "Odds On Dont Come Bet Initialized: Balance Passed\n"
                   << std::endl;
+
         this->generateNewID();
+        this->setWage(balance);
     }
 };
 
@@ -423,11 +467,13 @@ public:
         this->generateNewID();
     }
 
-    PlaceToWinBet(int wage, int point) : BetNode(wage, point)
+    PlaceToWinBet(const int balance)
     {
-        std::cout << "Place To Win Bet Initialized\n"
+        std::cout << "Place To Win Bet Initialized: Balance Passed\n"
                   << std::endl;
+
         this->generateNewID();
+        this->setWage(balance);
     }
 };
 
@@ -452,18 +498,20 @@ private:
     int getSouthVal(int wage) override;
 
 public:
-    PlaceToLoseBet() : BetNode()
+    PlaceToLoseBet()
     {
         std::cout << "Place To Lose Bet Initialized: Default\n"
                   << std::endl;
         this->generateNewID();
     }
 
-    PlaceToLoseBet(int wage, int point) : BetNode(wage, point)
+    PlaceToLoseBet(const int balance)
     {
-        std::cout << "Place To Lose Bet Initialized\n"
+        std::cout << "Place To Lose Bet Initialized: Balance Passed\n"
                   << std::endl;
+
         this->generateNewID();
+        this->setWage(balance);
     }
 };
 
@@ -488,18 +536,20 @@ private:
     int getSouthVal(int wage) override;
 
 public:
-    BuyBet() : BetNode()
+    BuyBet()
     {
         std::cout << "Buy Bet Initialized: Default\n"
                   << std::endl;
         this->generateNewID();
     }
 
-    BuyBet(int wage, int point) : BetNode(wage, point)
+    BuyBet(const int balance)
     {
-        std::cout << "Buy Bet Initialized\n"
+        std::cout << "Buy Bet Initialized: Default\n"
                   << std::endl;
+
         this->generateNewID();
+        this->setWage(balance);
     }
 };
 
@@ -524,18 +574,20 @@ private:
     int getSouthVal(int wage) override;
 
 public:
-    LayBet() : BetNode()
+    LayBet()
     {
         std::cout << "Lay Bet Initialized: Default\n"
                   << std::endl;
         this->generateNewID();
     }
 
-    LayBet(int wage, int point) : BetNode(wage, point)
+    LayBet(const int balance)
     {
-        std::cout << "Lay Bet Initialized\n"
+        std::cout << "Lay Bet Initialized: Balance Passed\n"
                   << std::endl;
+
         this->generateNewID();
+        this->setWage(balance);
     }
 };
 
@@ -553,7 +605,7 @@ private:
     bool validPayout(const int wage) override;
 
 public:
-    Big6Bet() : BetNode()
+    Big6Bet()
     {
         std::cout << "Big 6 Bet Initialized: Default\n"
                   << std::endl;
@@ -561,11 +613,13 @@ public:
         this->setPoint(6);
     }
 
-    Big6Bet(int wage) : BetNode(wage, 6)
+    Big6Bet(const int balance)
     {
-        std::cout << "Big 6 Bet Initialized\n"
+        std::cout << "Big 6 Bet Initialized: Balance Passed\n"
                   << std::endl;
         this->generateNewID();
+        this->setPoint(6);
+        this->setWage(balance);
     }
 };
 
@@ -586,7 +640,7 @@ private:
     // int getSouthVal(int wage) override;
 
 public:
-    Big8Bet() : BetNode()
+    Big8Bet()
     {
         std::cout << "Big 8 Bet Initialized: Default\n"
                   << std::endl;
@@ -594,11 +648,14 @@ public:
         this->setPoint(8);
     }
 
-    Big8Bet(int wage) : BetNode(wage, 8)
+    Big8Bet(const int balance)
     {
-        std::cout << "Big 8 Bet Initialized\n"
+        std::cout << "Big 8 Bet Initialized: Balance Passed\n"
                   << std::endl;
+
         this->generateNewID();
+        this->setPoint(8);
+        this->setWage(balance);
     }
 };
 
@@ -626,7 +683,7 @@ private:
     // int getSouthVal(int wage) override;
 
 public:
-    FieldBet() : BetNode()
+    FieldBet()
     {
         std::cout << "Field Bet Initialized: Default\n"
                   << std::endl;
@@ -634,12 +691,13 @@ public:
         this->generateNewID();
     }
 
-    FieldBet(int wage) : BetNode(wage)
+    FieldBet(const int balance)
     {
-        std::cout << "Field Bet Initialized\n"
+        std::cout << "Field Bet Initialized: Balance Passed\n"
                   << std::endl;
 
         this->generateNewID();
+        this->setWage(balance);
     }
 };
 
@@ -661,7 +719,7 @@ private:
     // int getSouthVal(int wage) override;
 
 public:
-    AnyCrapsBet() : BetNode()
+    AnyCrapsBet()
     {
         std::cout << "Any Craps Bet Initialized: Default\n"
                   << std::endl;
@@ -669,12 +727,13 @@ public:
         this->generateNewID();
     }
 
-    AnyCrapsBet(int wage) : BetNode(wage)
+    AnyCrapsBet(const int balance)
     {
-        std::cout << "Any Craps Bet Initialized\n"
+        std::cout << "Any Craps Bet Initialized: Balance Passed\n"
                   << std::endl;
 
         this->generateNewID();
+        this->setWage(balance);
     }
 };
 
@@ -694,7 +753,7 @@ private:
     // int getSouthVal(int wage) override;
 
 public:
-    AnySevenBet() : BetNode()
+    AnySevenBet()
     {
         std::cout << "Any Seven Bet Initialized: Default\n"
                   << std::endl;
@@ -703,12 +762,14 @@ public:
         this->setPoint(7);
     }
 
-    AnySevenBet(int wage) : BetNode(wage, 7)
+    AnySevenBet(const int balance)
     {
-        std::cout << "Any Seven Bet Initialized\n"
+        std::cout << "Any Seven Bet Initialized: Balance Passed\n"
                   << std::endl;
 
         this->generateNewID();
+        this->setPoint(7);
+        this->setWage(balance);
     }
 };
 
@@ -736,12 +797,14 @@ public:
         this->setPoint(11);
     }
 
-    YoBet(int wage) : BetNode(wage, 11)
+    YoBet(const int balance)
     {
-        std::cout << "Yo Bet Initialized\n"
+        std::cout << "Yo Bet Initialized: Balance Passed\n"
                   << std::endl;
 
         this->generateNewID();
+        this->setPoint(11);
+        this->setWage(balance);
     }
 };
 
@@ -761,7 +824,7 @@ private:
     // int getSouthVal(int wage) override;
 
 public:
-    AceDeuceBet() : BetNode()
+    AceDeuceBet()
     {
         std::cout << "Ace Deuce Bet Initialized\n"
                   << std::endl;
@@ -770,12 +833,14 @@ public:
         this->setPoint(3);
     }
 
-    AceDeuceBet(int wage) : BetNode(wage, 3)
+    AceDeuceBet(const int balance)
     {
-        std::cout << "Ace Deuce Bet Initialized\n"
+        std::cout << "Ace Deuce Bet Initialized: Balance Passed\n"
                   << std::endl;
 
         this->generateNewID();
+        this->setPoint(3);
+        this->setWage(balance);
     }
 };
 
@@ -795,7 +860,7 @@ private:
     // int getSouthVal(int wage) override;
 
 public:
-    SnakeEyesBet() : BetNode()
+    SnakeEyesBet()
     {
         std::cout << "Snake Eyes Bet Initialized: Default\n"
                   << std::endl;
@@ -804,12 +869,14 @@ public:
         this->setPoint(2);
     }
 
-    SnakeEyesBet(int wage) : BetNode(wage, 2)
+    SnakeEyesBet(const int balance)
     {
-        std::cout << "Snake Eyes Bet Initialized\n"
+        std::cout << "Snake Eyes Bet Initialized: Balance Passed\n"
                   << std::endl;
 
         this->generateNewID();
+        this->setPoint(2);
+        this->setWage(balance);
     }
 };
 
@@ -829,7 +896,7 @@ private:
     // int getSouthVal(int wage) override;
 
 public:
-    BoxCarsBet() : BetNode()
+    BoxCarsBet()
     {
         std::cout << "Box Cars Bet Initialized\n"
                   << std::endl;
@@ -838,13 +905,15 @@ public:
         this->setPoint(12);
     }
 
-    BoxCarsBet(int wage) : BetNode(wage, 12)
+    BoxCarsBet(const int balance)
     {
 
-        std::cout << "Box Cars Bet Initialized\n"
+        std::cout << "Box Cars Bet Initialized: Balance Passed\n"
                   << std::endl;
 
         this->generateNewID();
+        this->setPoint(12);
+        this->setWage(balance);
     }
 };
 
@@ -868,7 +937,7 @@ private:
     // int getSouthVal(int wage) override;
 
 public:
-    WorldBet() : BetNode()
+    WorldBet()
     {
         std::cout << "World Bet Initialized: Default\n"
                   << std::endl;
@@ -876,12 +945,13 @@ public:
         this->generateNewID();
     }
 
-    WorldBet(int wage) : BetNode(wage)
+    WorldBet(const int balance)
     {
-        std::cout << "World Bet Initialized\n"
+        std::cout << "World Bet Initialized: Balance Passed\n"
                   << std::endl;
 
         this->generateNewID();
+        this->setWage(balance);
     }
 };
 
@@ -902,7 +972,7 @@ private:
     virtual std::string generateID();
 
 public:
-    HornBet() : BetNode()
+    HornBet()
     {
         std::cout << "Horn Bet Initialized: Default\n"
                   << std::endl;
@@ -910,12 +980,13 @@ public:
         this->generateNewID();
     }
 
-    HornBet(int wage) : BetNode(wage)
+    HornBet(const int balance)
     {
-        std::cout << "Horn Bet Initialized\n"
+        std::cout << "Horn Bet Initialized: Balance Passed\n"
                   << std::endl;
 
         this->generateNewID();
+        this->setWage(balance);
     }
 };
 
@@ -943,15 +1014,17 @@ public:
         this->generateNewID();
     }
 
-    HornHighBet(int wage, int highNum) : HornBet(wage)
+    HornHighBet(const int balance)
     {
-        this->setPoint(highNum);
+        std::cout << "Horn High Bet Initialized: Balance Passed" << std::endl;
 
-        std::cout << "Horn High Bet Initialized" << std::endl;
+        // Function to get Point
+
         std::cout << "High Number: " << this->getPoint() << std::endl
                   << std::endl;
 
         this->generateNewID();
+        this->setWage(balance);
     }
 };
 
@@ -970,19 +1043,20 @@ private:
     bool validPayout(const int wage) override;
 
 public:
-    AllSmallBet() : BetNode()
+    AllSmallBet()
     {
         std::cout << "All Small Bet Initialized: Default\n"
                   << std::endl;
         this->generateNewID();
     }
 
-    AllSmallBet(int wage) : BetNode(wage)
+    AllSmallBet(const int balance)
     {
-        std::cout << "All Small Bet Initialized\n"
+        std::cout << "All Small Bet Initialized: Balance Passed\n"
                   << std::endl;
 
         this->generateNewID();
+        this->setWage(balance);
     }
 };
 
@@ -1001,7 +1075,7 @@ private:
     bool validPayout(const int wage) override;
 
 public:
-    AllTallBet() : BetNode()
+    AllTallBet()
     {
         std::cout << "All Tall Bet Initialized: Default\n"
                   << std::endl;
@@ -1009,12 +1083,13 @@ public:
         this->generateNewID();
     }
 
-    AllTallBet(int wage) : BetNode(wage)
+    AllTallBet(const int balance)
     {
-        std::cout << "All Tall Bet Initialzied\n"
+        std::cout << "All Tall Bet Initialzied: Balance Passed\n"
                   << std::endl;
 
         this->generateNewID();
+        this->setWage(balance);
     }
 };
 
@@ -1037,7 +1112,7 @@ private:
     bool validPayout(const int wage) override;
 
 public:
-    HardwayBet() : BetNode()
+    HardwayBet()
     {
         std::cout << "Hardway Bet Initialized: Default\n"
                   << std::endl;
@@ -1045,12 +1120,14 @@ public:
         this->generateNewID();
     }
 
-    HardwayBet(int wage, int point) : BetNode(wage, point)
+    HardwayBet(const int balance)
     {
-        std::cout << "Hardway Bet Initialized\n"
+        std::cout << "Hardway Bet Initialized: Balance Passed\n"
                   << std::endl;
 
+        // Function to get a Point
         this->generateNewID();
+        this->setWage(balance);
     }
 };
 
@@ -1071,7 +1148,7 @@ private:
     bool validPayout(const int wage) override;
 
 public:
-    FireBet() : BetNode()
+    FireBet()
     {
         std::cout << "Fire Bet Initialized\n"
                   << std::endl;
@@ -1079,11 +1156,12 @@ public:
         this->generateNewID();
     }
 
-    FireBet(int wage) : BetNode(wage)
+    FireBet(const int balance)
     {
         std::cout << "Fire Bet Initialized\n"
                   << std::endl;
 
         this->generateNewID();
+        this->setWage(balance);
     }
 };

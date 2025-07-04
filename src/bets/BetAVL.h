@@ -152,7 +152,7 @@ private:
 public:
   // Constructor
   BetAVL() = default;
-  BetAVL(int balance) : balance{balance} {}
+  BetAVL(const int &balance) : balance{balance} {}
 
   // Destructor
   ~BetAVL() = default;

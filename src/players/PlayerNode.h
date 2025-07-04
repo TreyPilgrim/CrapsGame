@@ -52,7 +52,7 @@ public:
     PlayerNode(string name, int &balance) : next{nullptr},
                                             prev{nullptr},
                                             shooter{false},
-                                            playerBets{std::make_shared<BetAVL>()}
+                                            playerBets{std::make_shared<BetAVL>(balance)}
     {
         this->setBalance(balance);
         this->setName(name);

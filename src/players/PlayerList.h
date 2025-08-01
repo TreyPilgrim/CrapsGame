@@ -21,9 +21,6 @@ public:
     PlayerList() : head{nullptr}, tail{nullptr}, shooter{nullptr} {}
     ~PlayerList() = default;
 
-    // Get Player1
-    playerNodePtr getP1();
-
     // Checker
     bool validWinAmount(char betType, int betAmount);
     bool pushPlayer(std::string name, int &playerBalance);
@@ -31,6 +28,7 @@ public:
 
     bool setShooter();
     bool p1Shooter();
+    bool p1HasNoBets();
 
     bool pop(std::string name); // remove node via name
     std::string peek();         // peek at the head node's name

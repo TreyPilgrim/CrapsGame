@@ -56,6 +56,8 @@ void Craps::placeWagerOptions() // Pass Bet & Don't Pass Bet
         // Any-Time Place Bets
         std::cout << "\n------------------------------------------------" << std::endl;
         std::cout << "Any-Time Place Bets" << std::endl;
+        std::cout << "9. Place To Win Bet" << std::endl;
+        std::cout << "10. Place To Lose Bet" << std::endl;
         std::cout << "11. Buy Bet" << std::endl;
         std::cout << "12. Lay Bet" << std::endl;
         std::cout << "13. Big 6 Bet" << std::endl;
@@ -74,12 +76,12 @@ void Craps::placeWagerOptions() // Pass Bet & Don't Pass Bet
         std::cout << "22. Whirl Bet" << std::endl;
         std::cout << "23. Horn Bet" << std::endl;
         std::cout << "24. Horn High Bet " << std::endl;
-        std::cout << "25. All Small Bet" << std::endl;
-        std::cout << "26. All Tall Bet" << std::endl;
 
         // Multi-Roll Proposition Bets
         std::cout << "\n------------------------------------------------" << std::endl;
         std::cout << "Multi-Roll Proposition Bets" << std::endl;
+        std::cout << "25. All Small Bet" << std::endl;
+        std::cout << "26. All Tall Bet" << std::endl;
         std::cout << "27. Hardways Bet" << std::endl;
         std::cout << "28. Fire Bet" << std::endl;
 
@@ -127,12 +129,13 @@ void Craps::placeWagerOptions() // Pass Bet & Don't Pass Bet
         std::cout << "22. Whirl Bet" << std::endl;
         std::cout << "23. Horn Bet" << std::endl;
         std::cout << "24. Horn High Bet " << std::endl;
-        std::cout << "25. All Small Bet" << std::endl;
-        std::cout << "26. All Tall Bet" << std::endl;
 
         // Multi-Roll Proposition Bets
         std::cout << "\n------------------------------------------------" << std::endl;
         std::cout << "Multi-Roll Proposition Bets" << std::endl;
+        std::cout << "25. All Small Bet" << std::endl;
+        std::cout << "26. All Tall Bet" << std::endl;
+
         std::cout << "27. Hardways Bet" << std::endl;
         std::cout << "28. Fire Bet" << std::endl;
 
@@ -196,7 +199,9 @@ void Craps::roundChoices()
         break;
     }
 }
-
+void Craps::quit()
+{
+}
 void Craps::roundChoicesDisplay()
 {
     std::cout << "\nRound Choices \n------------------------------------------------" << std::endl;
@@ -370,4 +375,68 @@ void Craps::theGame()
 {
     welcome();
     setP1();
+
+    int intInput{0};
+    double dubInput{0.0};
+    char charInput{'t'};
+
+    while (charInput != 'q' || charInput != 'Q')
+    {
+        this->roundChoicesDisplay();
+
+        if (token.readDouble(dubInput)) // Invalid Input
+        {
+            std::cout << "Invalid input..." << std::endl;
+            continue;
+        }
+
+        if (!token.readInt(intInput))
+        {
+            token.readChar(charInput);
+
+            switch (charInput)
+            {
+            case 'q':
+            case 'Q':
+
+                std::cout << "TODO: Create Game summary log function/cout << playerNode -- Congrats on finally getting far enough to test this part lol" << std::endl;
+                continue;
+                break;
+
+            case 'r':
+            case 'R':
+
+                if (Gamblers->p1HasNoBets())
+                {
+                    std::cout << "You haven't made any bets yet... you can't roll without bets" << std::endl;
+                    break;
+                }
+
+                this->dice->rollDice();
+                this->dice->printDice();
+
+                break; // Do post roll logic
+
+            default:
+                std::cout
+                    << "Invalid input..."
+                    << std::endl;
+                break;
+            }
+
+            token.isDone();
+            continue;
+        }
+
+        // switch (intInput)
+        // {
+        // case 1:
+        // case 2:
+        // case 3:
+        // case 4:
+        // default:
+        // }
+    }
+
+    std::cout << "Congrats sailor, you made it to the end" << std::endl;
 }

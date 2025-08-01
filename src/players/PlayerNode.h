@@ -77,4 +77,6 @@ public:
     void viewBets();               // betAVL - [2nd]
     void removeBet();              // betAVL - needs balance [3rd]
     void addFunds();               // betAVL - needs balance [4th]
+
+    bool emptyBetAvl();
 };

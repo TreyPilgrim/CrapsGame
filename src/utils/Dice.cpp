@@ -18,3 +18,9 @@ void Dice::rollDice()
     theDie[1] = randNum();
     theDie[2] = theDie[0] + theDie[1]; // total
 }
+
+void Dice::printDice()
+{
+    std::cout << "Dice #1: " << theDie[0] << std::endl;
+    std::cout << "Dice #2: " << theDie[1] << std::endl;
+}

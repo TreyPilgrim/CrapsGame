@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include <ctime>
 #include <cstdlib> // rand
 
@@ -6,12 +7,12 @@ class Dice
 {
 private:
     int randNum();
-
-public:
     int theDie[3];
 
+public:
     // Dice Functions
     void rollDice();
+    void printDice();
 
     Dice() = default;
     ~Dice() = default;

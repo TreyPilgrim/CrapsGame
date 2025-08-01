@@ -44,8 +44,15 @@ bool BetNode::validInt() // CHECK
     return true;
 }
 
-bool BetNode::validPayout(const int wage)
+bool BetNode::validPayout(const int wage, const int balance)
 {
+
+    if (balance < wage)
+    {
+        std::cout << "Aspirations bigger than you britches... \nYou don't have that kinda loot for those kinda wagers" << std::endl;
+
+        return false;
+    }
 
     auto it = payoutOdds.find(this->getPoint());
     if (it == payoutOdds.end()) // Does not exist
@@ -76,24 +83,31 @@ bool BetNode::validPayout(const int wage)
     return std::fabs(payout - std::round(payout)) < epsilon;
 }
 
-int BetNode::getNorthVal(int wage)
+int BetNode::getNorthVal(int wage, const int balance)
 {
-    while (!this->validPayout(wage))
+    if (wage > balance)
+        return -1;
+
+    while (!this->validPayout(wage, balance))
     {
+        if (wage == balance)
+            return 0;
+
         wage++;
     }
 
     return wage;
 }
 
-int BetNode::getSouthVal(int wage)
+int BetNode::getSouthVal(int wage, const int balance)
 {
-    while (!this->validPayout(wage) && wage >= MIN_WAGE)
-    {
-        wage--;
-    }
+    if (wage > balance) // Run With max bet if wage is over balance
+        return this->getSouthVal(balance, balance);
 
-    if (wage < MIN_WAGE) // no valid South
+    while (!this->validPayout(wage, balance) && wage >= MIN_WAGE) // Go until a valid payout is found
+        wage--;
+
+    if (wage < MIN_WAGE) // Make sure it is above the minimum wage amount
         return 0;
 
     return wage;
@@ -113,69 +127,86 @@ int BetNode::evaluateNextVal(const arr wageArr, const int &balance)
         {
             std::cout << "There smallest valid wager amount is less than the table's minimum ($" << MIN_WAGE << ")\nOnly option is to add more wages" << std::endl;
 
-            return 0;
+            return -1;
         }
+
+        return 0;
     }
 
     if (wageArr[1] == 0) // No valid south above MIN_Wage
     {
         std::cout << wageArr[0] << " is the next valid wage amount... the next minimum value is below the minimum wager amount ($" << MIN_WAGE << ")\n"
                   << std::endl;
+
+        return 0;
     }
 
     return 1;
 }
-arr BetNode::getNextValues(const int wage)
+
+arr BetNode::getNextValues(int wage, const int balance)
 {
     arr tmp = std::shared_ptr<int[]>(new int[2]);
 
-    tmp[0] = this->getNorthVal(wage); // Next
-    tmp[1] = this->getSouthVal(wage); // Previous
+    tmp[0] = this->getNorthVal(wage, balance); // Next
+    tmp[1] = this->getSouthVal(wage, balance); // Previous
 
     return tmp;
 }
 
 // Make sure wage entered is >= MINBET
-int BetNode::setTheWagePhase(const int balance)
+int BetNode::setTheWagePhasePointIndependent(const int balance)
 {
-    int wage;
-    bool validInt{false};
+    double dubVal{0.0};
+    int wage{0};
+    bool validWage{false};
 
-    while (!validInt)
+    while (!validWage)
     {
-        std::cout << "Enter a wage amount ($" << MIN_WAGE << "+) - Enter 'q' to return to previous screen: ";
+        std::cout << "How much are we waging today?" << std::endl;
 
-        if (!this->token.readInt(wage))
+        // User entered a decimal value
+        if (token.readDouble(dubVal))
         {
-            char emergency;
-            this->token.readChar(emergency);
+            std::cout << "We don't deal with coins here... \nBig Money™️ only" << std::endl;
 
-            if (emergency == 'q' || emergency == 'Q')
+            token.isDone();
+            continue;
+        }
+        else if (!token.readInt(wage)) // invalid input
+        {
+            std::cout << "Invalid input..." << std::endl;
+
+            token.isDone();
+            continue;
+        }
+        else if (wage < MIN_WAGE) // Wage is below minimum wage value
+        {
+            std::cout << "Value entered is below the minimum wage limit ($" << MIN_WAGE << ")" << std::endl;
+
+            token.isDone();
+            continue;
+        }
+
+        // Checking validity of the payout
+        if (!validPayout(wage, balance)) // Wage entered produces invalid payout (decimal)
+        {
+            arr validWages = this->getNextValues(wage, balance);
+
+            if (this->evaluateNextVal(validWages, balance) == -1) // Invalid Funds for a valid bet - user must add funds first
             {
+                std::cout << "No valid funds for any bet... User must add Funds" << std::endl;
+
                 token.isDone();
                 return -1;
             }
 
-            std::cout << "Invalid Input... Try again" << std::endl;
-            token.isDone();
-            continue;
-        }
-        else if (wage < MIN_WAGE) // too small a wage
-        {
-            std::cout << "Invalid Input... Please enter a value greater than $" << MIN_WAGE << std::endl;
-            token.isDone();
-            continue;
-        }
-        else if (!this->validPayout(wage)) // Virtual part - payout == whole number
-        {
-            if (this->evaluateNextVal(this->getNextValues(wage), balance) == 0)
-                return -1; // Too poor for any valid wage
-
             token.isDone();
             continue;
         }
 
-        validInt = true;
+        // set condition to true
+        validWage = true;
     }
 
     return wage;
@@ -255,13 +286,9 @@ void BetNode::setPoint(int point)
 }
 
 // Set the wager
-void BetNode::setWage(const int balance)
-
+void BetNode::setWage(const int wage)
 {
-    if (this->payoutOdds.empty())
-        this->failIf("Default payout odds initialized: BetNode\n");
-
-    this->wager = std::move(this->setTheWagePhase(balance)); // -1 on canceled inputs
+    this->wager = wage;
 }
 
 //-----------------------------------------------------------------------------------------
@@ -335,12 +362,73 @@ std::string PassLineBet::generateID()
     return ID;
 }
 
-bool PassLineBet::validPayout(const int wage)
+bool PassLineBet::validPayout(const int wage, const int balance)
 {
-    if (wage < MIN_WAGE)
+    if (balance < wage)
+    {
+        std::cout << "Aspirations bigger than you britches... \nYou don't have that kinda loot for those kinda wagers" << std::endl;
+
         return false;
+    }
+
+    else if (wage < MIN_WAGE)
+    {
+        std::cout << "Value entered is below the minimum wage limit ($" << MIN_WAGE << ")" << std::endl;
+        return false;
+    }
 
     return true; // all payouts work w/ 1:1
+}
+
+int PassLineBet::setTheWagePhase(const int balance)
+{
+    double dubVal{0.0};
+    int wage{0};
+    bool validWage{false};
+
+    while (!validWage)
+    {
+        std::cout << "How much are we waging today?" << std::endl;
+
+        // User entered a decimal value
+        if (token.readDouble(dubVal))
+        {
+            std::cout << "We don't deal with coins here... \nBig Money™️ only" << std::endl;
+
+            token.isDone();
+            continue;
+        }
+        else if (!token.readInt(wage)) // invalid input
+        {
+            std::cout << "Invalid input..." << std::endl;
+
+            token.isDone();
+            continue;
+        }
+
+        // Checking validity of the payout
+        if (!validPayout(wage, balance)) // Wage entered produces invalid payout (decimal)
+        {
+            arr validWages = this->getNextValues(wage, balance);
+
+            if (this->evaluateNextVal(validWages, balance) == -1) // Invalid Funds for a valid bet - user must add funds first
+            {
+
+                std::cout << "No valid funds for any bet... User must add Funds" << std::endl;
+
+                token.isDone();
+                return -1;
+            }
+
+            token.isDone();
+            continue;
+        }
+
+        // set condition to true
+        validWage = true;
+    }
+
+    return wage;
 }
 
 //----------------------------------------------------------------------------------------
@@ -403,14 +491,76 @@ std::string DontPassLineBet::generateID()
     return ID;
 }
 
-bool DontPassLineBet::validPayout(const int wage)
+bool DontPassLineBet::validPayout(const int wage, const int balance)
 {
-    if (wage < MIN_WAGE)
-        return false;
+    if (balance < wage)
+    {
+        std::cout << "Aspirations bigger than you britches... \nYou don't have that kinda loot for those kinda wagers" << std::endl;
 
-    return true; // all payouts work w/ 1:1
+        return false;
+    }
+
+    else if (wage < MIN_WAGE)
+    {
+        std::cout << "Value entered is below the minimum wage limit ($" << MIN_WAGE << ")" << std::endl;
+        return false;
+    }
+
+    return true; // all payouts work w/ whole number odds
 }
 
+int DontPassLineBet::setTheWagePhase(const int balance)
+{
+    double dubVal{0.0};
+    int wage{0};
+    bool validWage{false};
+
+    while (!validWage)
+    {
+        std::cout << "How much are we waging today?" << std::endl;
+
+        // User entered a decimal value
+        if (token.readDouble(dubVal))
+        {
+            std::cout << "We don't deal with coins here... \nBig Money™️ only" << std::endl;
+
+            token.isDone();
+            continue;
+        }
+        else if (!token.readInt(wage)) // invalid input
+        {
+            std::cout << "Invalid input..." << std::endl;
+
+            token.isDone();
+            continue;
+        }
+
+        // Checking validity of the payout
+        if (!validPayout(wage, balance)) // Wage entered produces invalid payout (decimal)
+        {
+            arr validWages = this->getNextValues(wage, balance);
+
+            if (this->evaluateNextVal(validWages, balance) == -1) // Invalid Funds for a valid bet - user must add funds first
+            {
+
+                std::cout << "No valid funds for any bet... User must add Funds" << std::endl;
+
+                token.isDone();
+                return -1;
+            }
+
+            std::cout << "Value entered is below the minimum wage limit ($" << MIN_WAGE << ")" << std::endl;
+
+            token.isDone();
+            continue;
+        }
+
+        // set condition to true
+        validWage = true;
+    }
+
+    return wage;
+}
 // Update the first roll value - point needs to be establish
 void DontPassLineBet::notFirstRoll()
 {
@@ -472,13 +622,77 @@ std::string ComeBet::generateID()
     return ID;
 }
 
-bool ComeBet::validPayout(const int wage)
+bool ComeBet::validPayout(const int wage, const int balance)
 {
-    if (wage < MIN_WAGE)
-        return false;
+    if (balance < wage)
+    {
+        std::cout << "Aspirations bigger than you britches... \nYou don't have that kinda loot for those kinda wagers" << std::endl;
 
-    return true; // all payouts work w/ 1:1
+        return false;
+    }
+
+    else if (wage < MIN_WAGE)
+    {
+        std::cout << "Value entered is below the minimum wage limit ($" << MIN_WAGE << ")" << std::endl;
+        return false;
+    }
+
+    return true; // all payouts work w/ whole number odds
 }
+
+int ComeBet::setTheWagePhase(const int balance)
+{
+    double dubVal{0.0};
+    int wage{0};
+    bool validWage{false};
+
+    while (!validWage)
+    {
+        std::cout << "How much are we waging today?" << std::endl;
+
+        // User entered a decimal value
+        if (token.readDouble(dubVal))
+        {
+            std::cout << "We don't deal with coins here... \nBig Money™️ only" << std::endl;
+
+            token.isDone();
+            continue;
+        }
+        else if (!token.readInt(wage)) // invalid input
+        {
+            std::cout << "Invalid input..." << std::endl;
+
+            token.isDone();
+            continue;
+        }
+
+        // Checking validity of the payout
+        if (!validPayout(wage, balance)) // Wage entered produces invalid payout (decimal)
+        {
+            arr validWages = this->getNextValues(wage, balance);
+
+            if (this->evaluateNextVal(validWages, balance) == -1) // Invalid Funds for a valid bet - user must add funds first
+            {
+
+                std::cout << "No valid funds for any bet... User must add Funds" << std::endl;
+
+                token.isDone();
+                return -1;
+            }
+
+            std::cout << "Value entered is below the minimum wage limit ($" << MIN_WAGE << ")" << std::endl;
+
+            token.isDone();
+            continue;
+        }
+
+        // set condition to true
+        validWage = true;
+    }
+
+    return wage;
+}
+
 // Update the first roll value - point needs to be establish
 void ComeBet::notFirstRoll()
 {
@@ -556,12 +770,75 @@ void DontComeBet::notFirstRoll()
 //     return (diceVal == 7) ? true : false;
 // }
 
-bool DontComeBet::validPayout(const int wage)
+bool DontComeBet::validPayout(const int wage, const int balance)
 {
-    if (wage < MIN_WAGE)
-        return false;
+    if (balance < wage)
+    {
+        std::cout << "Aspirations bigger than you britches... \nYou don't have that kinda loot for those kinda wagers" << std::endl;
 
-    return true; // all payouts work w/ 1:1
+        return false;
+    }
+
+    else if (wage < MIN_WAGE)
+    {
+        std::cout << "Value entered is below the minimum wage limit ($" << MIN_WAGE << ")" << std::endl;
+        return false;
+    }
+
+    return true; // all payouts work w/ whole number odds
+}
+
+int DontComeBet::setTheWagePhase(const int balance)
+{
+    double dubVal{0.0};
+    int wage{0};
+    bool validWage{false};
+
+    while (!validWage)
+    {
+        std::cout << "How much are we waging today?" << std::endl;
+
+        // User entered a decimal value
+        if (token.readDouble(dubVal))
+        {
+            std::cout << "We don't deal with coins here... \nBig Money™️ only" << std::endl;
+
+            token.isDone();
+            continue;
+        }
+        else if (!token.readInt(wage)) // invalid input
+        {
+            std::cout << "Invalid input..." << std::endl;
+
+            token.isDone();
+            continue;
+        }
+
+        // Checking validity of the payout
+        if (!validPayout(wage, balance)) // Wage entered produces invalid payout (decimal)
+        {
+            arr validWages = this->getNextValues(wage, balance);
+
+            if (this->evaluateNextVal(validWages, balance) == -1) // Invalid Funds for a valid bet - user must add funds first
+            {
+
+                std::cout << "No valid funds for any bet... User must add Funds" << std::endl;
+
+                token.isDone();
+                return -1;
+            }
+
+            std::cout << "Value entered is below the minimum wage limit ($" << MIN_WAGE << ")" << std::endl;
+
+            token.isDone();
+            continue;
+        }
+
+        // set condition to true
+        validWage = true;
+    }
+
+    return wage;
 }
 
 // // Losing Ticket Checker
@@ -737,12 +1014,75 @@ std::string Big6Bet::generateID()
     return ID;
 }
 
-bool Big6Bet::validPayout(const int wage)
+bool Big6Bet::validPayout(const int wage, const int balance)
 {
-    if (wage < MIN_WAGE)
-        return false;
+    if (balance < wage)
+    {
+        std::cout << "Aspirations bigger than you britches... \nYou don't have that kinda loot for those kinda wagers" << std::endl;
 
-    return true; // all payouts work w/ 1:1
+        return false;
+    }
+
+    else if (wage < MIN_WAGE)
+    {
+        std::cout << "Value entered is below the minimum wage limit ($" << MIN_WAGE << ")" << std::endl;
+        return false;
+    }
+
+    return true; // all payouts work w/ whole number odds
+}
+
+int Big6Bet::setTheWagePhase(const int balance)
+{
+    double dubVal{0.0};
+    int wage{0};
+    bool validWage{false};
+
+    while (!validWage)
+    {
+        std::cout << "How much are we waging today?" << std::endl;
+
+        // User entered a decimal value
+        if (token.readDouble(dubVal))
+        {
+            std::cout << "We don't deal with coins here... \nBig Money™️ only" << std::endl;
+
+            token.isDone();
+            continue;
+        }
+        else if (!token.readInt(wage)) // invalid input
+        {
+            std::cout << "Invalid input..." << std::endl;
+
+            token.isDone();
+            continue;
+        }
+
+        // Checking validity of the payout
+        if (!validPayout(wage, balance)) // Wage entered produces invalid payout (decimal)
+        {
+            arr validWages = this->getNextValues(wage, balance);
+
+            if (this->evaluateNextVal(validWages, balance) == -1) // Invalid Funds for a valid bet - user must add funds first
+            {
+
+                std::cout << "No valid funds for any bet... User must add Funds" << std::endl;
+
+                token.isDone();
+                return -1;
+            }
+
+            std::cout << "Value entered is below the minimum wage limit ($" << MIN_WAGE << ")" << std::endl;
+
+            token.isDone();
+            continue;
+        }
+
+        // set condition to true
+        validWage = true;
+    }
+
+    return wage;
 }
 
 /*
@@ -762,12 +1102,75 @@ std::string Big8Bet::generateID()
     return ID;
 }
 
-bool Big8Bet::validPayout(const int wage)
+bool Big8Bet::validPayout(const int wage, const int balance)
 {
-    if (wage < MIN_WAGE)
-        return false;
+    if (balance < wage)
+    {
+        std::cout << "Aspirations bigger than you britches... \nYou don't have that kinda loot for those kinda wagers" << std::endl;
 
-    return true; // all payouts work w/ 1:1
+        return false;
+    }
+
+    else if (wage < MIN_WAGE)
+    {
+        std::cout << "Value entered is below the minimum wage limit ($" << MIN_WAGE << ")" << std::endl;
+        return false;
+    }
+
+    return true; // all payouts work w/ whole number odds
+}
+
+int Big8Bet::setTheWagePhase(const int balance)
+{
+    double dubVal{0.0};
+    int wage{0};
+    bool validWage{false};
+
+    while (!validWage)
+    {
+        std::cout << "How much are we waging today?" << std::endl;
+
+        // User entered a decimal value
+        if (token.readDouble(dubVal))
+        {
+            std::cout << "We don't deal with coins here... \nBig Money™️ only" << std::endl;
+
+            token.isDone();
+            continue;
+        }
+        else if (!token.readInt(wage)) // invalid input
+        {
+            std::cout << "Invalid input..." << std::endl;
+
+            token.isDone();
+            continue;
+        }
+
+        // Checking validity of the payout
+        if (!validPayout(wage, balance)) // Wage entered produces invalid payout (decimal)
+        {
+            arr validWages = this->getNextValues(wage, balance);
+
+            if (this->evaluateNextVal(validWages, balance) == -1) // Invalid Funds for a valid bet - user must add funds first
+            {
+
+                std::cout << "No valid funds for any bet... User must add Funds" << std::endl;
+
+                token.isDone();
+                return -1;
+            }
+
+            std::cout << "Value entered is below the minimum wage limit ($" << MIN_WAGE << ")" << std::endl;
+
+            token.isDone();
+            continue;
+        }
+
+        // set condition to true
+        validWage = true;
+    }
+
+    return wage;
 }
 
 /*
@@ -787,12 +1190,75 @@ std::string FieldBet::generateID()
     return ID;
 }
 
-bool FieldBet::validPayout(const int wage)
+bool FieldBet::validPayout(const int wage, const int balance)
 {
-    if (wage < MIN_WAGE)
-        return false;
+    if (balance < wage)
+    {
+        std::cout << "Aspirations bigger than you britches... \nYou don't have that kinda loot for those kinda wagers" << std::endl;
 
-    return true; // all payouts work w/ 1:1
+        return false;
+    }
+
+    else if (wage < MIN_WAGE)
+    {
+        std::cout << "Value entered is below the minimum wage limit ($" << MIN_WAGE << ")" << std::endl;
+        return false;
+    }
+
+    return true; // all payouts work w/ whole number odds
+}
+
+int FieldBet::setTheWagePhase(const int balance)
+{
+    double dubVal{0.0};
+    int wage{0};
+    bool validWage{false};
+
+    while (!validWage)
+    {
+        std::cout << "How much are we waging today?" << std::endl;
+
+        // User entered a decimal value
+        if (token.readDouble(dubVal))
+        {
+            std::cout << "We don't deal with coins here... \nBig Money™️ only" << std::endl;
+
+            token.isDone();
+            continue;
+        }
+        else if (!token.readInt(wage)) // invalid input
+        {
+            std::cout << "Invalid input..." << std::endl;
+
+            token.isDone();
+            continue;
+        }
+
+        // Checking validity of the payout
+        if (!validPayout(wage, balance)) // Wage entered produces invalid payout (decimal)
+        {
+            arr validWages = this->getNextValues(wage, balance);
+
+            if (this->evaluateNextVal(validWages, balance) == -1) // Invalid Funds for a valid bet - user must add funds first
+            {
+
+                std::cout << "No valid funds for any bet... User must add Funds" << std::endl;
+
+                token.isDone();
+                return -1;
+            }
+
+            std::cout << "Value entered is below the minimum wage limit ($" << MIN_WAGE << ")" << std::endl;
+
+            token.isDone();
+            continue;
+        }
+
+        // set condition to true
+        validWage = true;
+    }
+
+    return wage;
 }
 
 /*
@@ -813,12 +1279,75 @@ std::string AnyCrapsBet::generateID()
     return ID;
 }
 
-bool AnyCrapsBet::validPayout(const int wage)
+bool AnyCrapsBet::validPayout(const int wage, const int balance)
 {
-    if (wage < MIN_WAGE)
-        return false;
+    if (balance < wage)
+    {
+        std::cout << "Aspirations bigger than you britches... \nYou don't have that kinda loot for those kinda wagers" << std::endl;
 
-    return true; // all payouts work w/ 1:1
+        return false;
+    }
+
+    else if (wage < MIN_WAGE)
+    {
+        std::cout << "Value entered is below the minimum wage limit ($" << MIN_WAGE << ")" << std::endl;
+        return false;
+    }
+
+    return true; // all payouts work w/ whole number odds
+}
+
+int AnyCrapsBet::setTheWagePhase(const int balance)
+{
+    double dubVal{0.0};
+    int wage{0};
+    bool validWage{false};
+
+    while (!validWage)
+    {
+        std::cout << "How much are we waging today?" << std::endl;
+
+        // User entered a decimal value
+        if (token.readDouble(dubVal))
+        {
+            std::cout << "We don't deal with coins here... \nBig Money™️ only" << std::endl;
+
+            token.isDone();
+            continue;
+        }
+        else if (!token.readInt(wage)) // invalid input
+        {
+            std::cout << "Invalid input..." << std::endl;
+
+            token.isDone();
+            continue;
+        }
+
+        // Checking validity of the payout
+        if (!validPayout(wage, balance)) // Wage entered produces invalid payout (decimal)
+        {
+            arr validWages = this->getNextValues(wage, balance);
+
+            if (this->evaluateNextVal(validWages, balance) == -1) // Invalid Funds for a valid bet - user must add funds first
+            {
+
+                std::cout << "No valid funds for any bet... User must add Funds" << std::endl;
+
+                token.isDone();
+                return -1;
+            }
+
+            std::cout << "Value entered is below the minimum wage limit ($" << MIN_WAGE << ")" << std::endl;
+
+            token.isDone();
+            continue;
+        }
+
+        // set condition to true
+        validWage = true;
+    }
+
+    return wage;
 }
 
 /*
@@ -838,14 +1367,76 @@ std::string AnySevenBet::generateID()
     return ID;
 }
 
-bool AnySevenBet::validPayout(const int wage)
+bool AnySevenBet::validPayout(const int wage, const int balance)
 {
-    if (wage < MIN_WAGE)
-        return false;
+    if (balance < wage)
+    {
+        std::cout << "Aspirations bigger than you britches... \nYou don't have that kinda loot for those kinda wagers" << std::endl;
 
-    return true; // all payouts work w/ 1:1
+        return false;
+    }
+
+    else if (wage < MIN_WAGE)
+    {
+        std::cout << "Value entered is below the minimum wage limit ($" << MIN_WAGE << ")" << std::endl;
+        return false;
+    }
+
+    return true; // all payouts work w/ whole number odds
 }
 
+int AnySevenBet::setTheWagePhase(const int balance)
+{
+    double dubVal{0.0};
+    int wage{0};
+    bool validWage{false};
+
+    while (!validWage)
+    {
+        std::cout << "How much are we waging today?" << std::endl;
+
+        // User entered a decimal value
+        if (token.readDouble(dubVal))
+        {
+            std::cout << "We don't deal with coins here... \nBig Money™️ only" << std::endl;
+
+            token.isDone();
+            continue;
+        }
+        else if (!token.readInt(wage)) // invalid input
+        {
+            std::cout << "Invalid input..." << std::endl;
+
+            token.isDone();
+            continue;
+        }
+
+        // Checking validity of the payout
+        if (!validPayout(wage, balance)) // Wage entered produces invalid payout (decimal)
+        {
+            arr validWages = this->getNextValues(wage, balance);
+
+            if (this->evaluateNextVal(validWages, balance) == -1) // Invalid Funds for a valid bet - user must add funds first
+            {
+
+                std::cout << "No valid funds for any bet... User must add Funds" << std::endl;
+
+                token.isDone();
+                return -1;
+            }
+
+            std::cout << "Value entered is below the minimum wage limit ($" << MIN_WAGE << ")" << std::endl;
+
+            token.isDone();
+            continue;
+        }
+
+        // set condition to true
+        validWage = true;
+    }
+
+    return wage;
+}
 /*
     Yo Bet
 */
@@ -864,14 +1455,76 @@ std::string YoBet::generateID()
     return ID;
 }
 
-bool YoBet::validPayout(const int wage)
+bool YoBet::validPayout(const int wage, const int balance)
 {
-    if (wage < MIN_WAGE)
-        return false;
+    if (balance < wage)
+    {
+        std::cout << "Aspirations bigger than you britches... \nYou don't have that kinda loot for those kinda wagers" << std::endl;
 
-    return true; // all payouts work w/ 1:1
+        return false;
+    }
+
+    else if (wage < MIN_WAGE)
+    {
+        std::cout << "Value entered is below the minimum wage limit ($" << MIN_WAGE << ")" << std::endl;
+        return false;
+    }
+
+    return true; // all payouts work w/ whole number odds
 }
 
+int YoBet::setTheWagePhase(const int balance)
+{
+    double dubVal{0.0};
+    int wage{0};
+    bool validWage{false};
+
+    while (!validWage)
+    {
+        std::cout << "How much are we waging today?" << std::endl;
+
+        // User entered a decimal value
+        if (token.readDouble(dubVal))
+        {
+            std::cout << "We don't deal with coins here... \nBig Money™️ only" << std::endl;
+
+            token.isDone();
+            continue;
+        }
+        else if (!token.readInt(wage)) // invalid input
+        {
+            std::cout << "Invalid input..." << std::endl;
+
+            token.isDone();
+            continue;
+        }
+
+        // Checking validity of the payout
+        if (!validPayout(wage, balance)) // Wage entered produces invalid payout (decimal)
+        {
+            arr validWages = this->getNextValues(wage, balance);
+
+            if (this->evaluateNextVal(validWages, balance) == -1) // Invalid Funds for a valid bet - user must add funds first
+            {
+
+                std::cout << "No valid funds for any bet... User must add Funds" << std::endl;
+
+                token.isDone();
+                return -1;
+            }
+
+            std::cout << "Value entered is below the minimum wage limit ($" << MIN_WAGE << ")" << std::endl;
+
+            token.isDone();
+            continue;
+        }
+
+        // set condition to true
+        validWage = true;
+    }
+
+    return wage;
+}
 /*
     Ace Deuce Bet
 */
@@ -889,12 +1542,75 @@ std::string AceDeuceBet::generateID()
     return ID;
 }
 
-bool AceDeuceBet::validPayout(const int wage)
+bool AceDeuceBet::validPayout(const int wage, const int balance)
 {
-    if (wage < MIN_WAGE)
-        return false;
+    if (balance < wage)
+    {
+        std::cout << "Aspirations bigger than you britches... \nYou don't have that kinda loot for those kinda wagers" << std::endl;
 
-    return true; // all payouts work w/ 1:1
+        return false;
+    }
+
+    else if (wage < MIN_WAGE)
+    {
+        std::cout << "Value entered is below the minimum wage limit ($" << MIN_WAGE << ")" << std::endl;
+        return false;
+    }
+
+    return true; // all payouts work w/ whole number odds
+}
+
+int AceDeuceBet::setTheWagePhase(const int balance)
+{
+    double dubVal{0.0};
+    int wage{0};
+    bool validWage{false};
+
+    while (!validWage)
+    {
+        std::cout << "How much are we waging today?" << std::endl;
+
+        // User entered a decimal value
+        if (token.readDouble(dubVal))
+        {
+            std::cout << "We don't deal with coins here... \nBig Money™️ only" << std::endl;
+
+            token.isDone();
+            continue;
+        }
+        else if (!token.readInt(wage)) // invalid input
+        {
+            std::cout << "Invalid input..." << std::endl;
+
+            token.isDone();
+            continue;
+        }
+
+        // Checking validity of the payout
+        if (!validPayout(wage, balance)) // Wage entered produces invalid payout (decimal)
+        {
+            arr validWages = this->getNextValues(wage, balance);
+
+            if (this->evaluateNextVal(validWages, balance) == -1) // Invalid Funds for a valid bet - user must add funds first
+            {
+
+                std::cout << "No valid funds for any bet... User must add Funds" << std::endl;
+
+                token.isDone();
+                return -1;
+            }
+
+            std::cout << "Value entered is below the minimum wage limit ($" << MIN_WAGE << ")" << std::endl;
+
+            token.isDone();
+            continue;
+        }
+
+        // set condition to true
+        validWage = true;
+    }
+
+    return wage;
 }
 
 /*
@@ -914,14 +1630,76 @@ std::string SnakeEyesBet::generateID()
     return ID;
 }
 
-bool SnakeEyesBet::validPayout(const int wage)
+bool SnakeEyesBet::validPayout(const int wage, const int balance)
 {
-    if (wage < MIN_WAGE)
-        return false;
+    if (balance < wage)
+    {
+        std::cout << "Aspirations bigger than you britches... \nYou don't have that kinda loot for those kinda wagers" << std::endl;
 
-    return true; // all payouts work w/ 1:1
+        return false;
+    }
+
+    else if (wage < MIN_WAGE)
+    {
+        std::cout << "Value entered is below the minimum wage limit ($" << MIN_WAGE << ")" << std::endl;
+        return false;
+    }
+
+    return true; // all payouts work w/ whole number odds
 }
 
+int SnakeEyesBet::setTheWagePhase(const int balance)
+{
+    double dubVal{0.0};
+    int wage{0};
+    bool validWage{false};
+
+    while (!validWage)
+    {
+        std::cout << "How much are we waging today?" << std::endl;
+
+        // User entered a decimal value
+        if (token.readDouble(dubVal))
+        {
+            std::cout << "We don't deal with coins here... \nBig Money™️ only" << std::endl;
+
+            token.isDone();
+            continue;
+        }
+        else if (!token.readInt(wage)) // invalid input
+        {
+            std::cout << "Invalid input..." << std::endl;
+
+            token.isDone();
+            continue;
+        }
+
+        // Checking validity of the payout
+        if (!validPayout(wage, balance)) // Wage entered produces invalid payout (decimal)
+        {
+            arr validWages = this->getNextValues(wage, balance);
+
+            if (this->evaluateNextVal(validWages, balance) == -1) // Invalid Funds for a valid bet - user must add funds first
+            {
+
+                std::cout << "No valid funds for any bet... User must add Funds" << std::endl;
+
+                token.isDone();
+                return -1;
+            }
+
+            std::cout << "Value entered is below the minimum wage limit ($" << MIN_WAGE << ")" << std::endl;
+
+            token.isDone();
+            continue;
+        }
+
+        // set condition to true
+        validWage = true;
+    }
+
+    return wage;
+}
 /*
     Box Car Bet
 */
@@ -939,12 +1717,75 @@ std::string BoxCarsBet::generateID()
     return ID;
 }
 
-bool BoxCarsBet::validPayout(const int wage)
+bool BoxCarsBet::validPayout(const int wage, const int balance)
 {
-    if (wage < MIN_WAGE)
-        return false;
+    if (balance < wage)
+    {
+        std::cout << "Aspirations bigger than you britches... \nYou don't have that kinda loot for those kinda wagers" << std::endl;
 
-    return true; // all payouts work w/ 1:1
+        return false;
+    }
+
+    else if (wage < MIN_WAGE)
+    {
+        std::cout << "Value entered is below the minimum wage limit ($" << MIN_WAGE << ")" << std::endl;
+        return false;
+    }
+
+    return true; // all payouts work w/ whole number odds
+}
+
+int BoxCarsBet::setTheWagePhase(const int balance)
+{
+    double dubVal{0.0};
+    int wage{0};
+    bool validWage{false};
+
+    while (!validWage)
+    {
+        std::cout << "How much are we waging today?" << std::endl;
+
+        // User entered a decimal value
+        if (token.readDouble(dubVal))
+        {
+            std::cout << "We don't deal with coins here... \nBig Money™️ only" << std::endl;
+
+            token.isDone();
+            continue;
+        }
+        else if (!token.readInt(wage)) // invalid input
+        {
+            std::cout << "Invalid input..." << std::endl;
+
+            token.isDone();
+            continue;
+        }
+
+        // Checking validity of the payout
+        if (!validPayout(wage, balance)) // Wage entered produces invalid payout (decimal)
+        {
+            arr validWages = this->getNextValues(wage, balance);
+
+            if (this->evaluateNextVal(validWages, balance) == -1) // Invalid Funds for a valid bet - user must add funds first
+            {
+
+                std::cout << "No valid funds for any bet... User must add Funds" << std::endl;
+
+                token.isDone();
+                return -1;
+            }
+
+            std::cout << "Value entered is below the minimum wage limit ($" << MIN_WAGE << ")" << std::endl;
+
+            token.isDone();
+            continue;
+        }
+
+        // set condition to true
+        validWage = true;
+    }
+
+    return wage;
 }
 
 /*
@@ -964,12 +1805,75 @@ std::string WorldBet::generateID()
     return ID;
 }
 
-bool WorldBet::validPayout(const int wage)
+bool WorldBet::validPayout(const int wage, const int balance)
 {
-    if (wage < MIN_WAGE)
-        return false;
+    if (balance < wage)
+    {
+        std::cout << "Aspirations bigger than you britches... \nYou don't have that kinda loot for those kinda wagers" << std::endl;
 
-    return true;
+        return false;
+    }
+
+    else if (wage < MIN_WAGE)
+    {
+        std::cout << "Value entered is below the minimum wage limit ($" << MIN_WAGE << ")" << std::endl;
+        return false;
+    }
+
+    return true; // all payouts work w/ whole number odds
+}
+
+int WorldBet::setTheWagePhase(const int balance)
+{
+    double dubVal{0.0};
+    int wage{0};
+    bool validWage{false};
+
+    while (!validWage)
+    {
+        std::cout << "How much are we waging today?" << std::endl;
+
+        // User entered a decimal value
+        if (token.readDouble(dubVal))
+        {
+            std::cout << "We don't deal with coins here... \nBig Money™️ only" << std::endl;
+
+            token.isDone();
+            continue;
+        }
+        else if (!token.readInt(wage)) // invalid input
+        {
+            std::cout << "Invalid input..." << std::endl;
+
+            token.isDone();
+            continue;
+        }
+
+        // Checking validity of the payout
+        if (!validPayout(wage, balance)) // Wage entered produces invalid payout (decimal)
+        {
+            arr validWages = this->getNextValues(wage, balance);
+
+            if (this->evaluateNextVal(validWages, balance) == -1) // Invalid Funds for a valid bet - user must add funds first
+            {
+
+                std::cout << "No valid funds for any bet... User must add Funds" << std::endl;
+
+                token.isDone();
+                return -1;
+            }
+
+            std::cout << "Value entered is below the minimum wage limit ($" << MIN_WAGE << ")" << std::endl;
+
+            token.isDone();
+            continue;
+        }
+
+        // set condition to true
+        validWage = true;
+    }
+
+    return wage;
 }
 
 /*
@@ -1022,12 +1926,75 @@ std::string AllSmallBet::generateID()
 
     return ID;
 }
-bool AllSmallBet::validPayout(const int wage)
+bool AllSmallBet::validPayout(const int wage, const int balance)
 {
-    if (wage < MIN_WAGE)
-        return false;
+    if (balance < wage)
+    {
+        std::cout << "Aspirations bigger than you britches... \nYou don't have that kinda loot for those kinda wagers" << std::endl;
 
-    return true;
+        return false;
+    }
+
+    else if (wage < MIN_WAGE)
+    {
+        std::cout << "Value entered is below the minimum wage limit ($" << MIN_WAGE << ")" << std::endl;
+        return false;
+    }
+
+    return true; // all payouts work w/ whole number odds
+}
+
+int AllSmallBet::setTheWagePhase(const int balance)
+{
+    double dubVal{0.0};
+    int wage{0};
+    bool validWage{false};
+
+    while (!validWage)
+    {
+        std::cout << "How much are we waging today?" << std::endl;
+
+        // User entered a decimal value
+        if (token.readDouble(dubVal))
+        {
+            std::cout << "We don't deal with coins here... \nBig Money™️ only" << std::endl;
+
+            token.isDone();
+            continue;
+        }
+        else if (!token.readInt(wage)) // invalid input
+        {
+            std::cout << "Invalid input..." << std::endl;
+
+            token.isDone();
+            continue;
+        }
+
+        // Checking validity of the payout
+        if (!validPayout(wage, balance)) // Wage entered produces invalid payout (decimal)
+        {
+            arr validWages = this->getNextValues(wage, balance);
+
+            if (this->evaluateNextVal(validWages, balance) == -1) // Invalid Funds for a valid bet - user must add funds first
+            {
+
+                std::cout << "No valid funds for any bet... User must add Funds" << std::endl;
+
+                token.isDone();
+                return -1;
+            }
+
+            std::cout << "Value entered is below the minimum wage limit ($" << MIN_WAGE << ")" << std::endl;
+
+            token.isDone();
+            continue;
+        }
+
+        // set condition to true
+        validWage = true;
+    }
+
+    return wage;
 }
 
 /*
@@ -1047,12 +2014,76 @@ std::string AllTallBet::generateID()
     return ID;
 }
 
-bool AllTallBet::validPayout(const int wage)
+bool AllTallBet::validPayout(const int wage, const int balance)
 {
-    if (wage < MIN_WAGE)
-        return false;
+    if (balance < wage)
+    {
+        std::cout << "Aspirations bigger than you britches... \nYou don't have that kinda loot for those kinda wagers" << std::endl;
 
-    return true;
+        return false;
+    }
+
+    else if (wage < MIN_WAGE)
+    {
+        std::cout << "Value entered is below the minimum wage limit ($" << MIN_WAGE << ")" << std::endl;
+        return false;
+    }
+
+    return true; // all payouts work w/ whole number odds
+}
+
+int AllTallBet::setTheWagePhase(const int balance)
+{
+    double dubVal{0.0};
+    int wage{0};
+    bool validWage{false};
+
+    while (!validWage)
+    {
+        std::cout << "How much are we waging today?" << std::endl;
+
+        // User entered a decimal value
+        if (token.readDouble(dubVal))
+        {
+            std::cout << "We don't deal with coins here... \nBig Money™️ only" << std::endl;
+
+            token.isDone();
+            continue;
+        }
+        else if (!token.readInt(wage)) // invalid input
+        {
+            std::cout << "Invalid input..." << std::endl;
+
+            token.isDone();
+            continue;
+        }
+
+        // Checking validity of the payout
+        if (!validPayout(wage, balance)) // Wage entered produces invalid payout (decimal)
+        {
+            if (wage <= balance)
+            {
+                arr validWages = this->getNextValues(wage, balance);
+
+                if (this->evaluateNextVal(validWages, balance) == -1) // Invalid Funds for a valid bet - user must add funds first
+                {
+
+                    std::cout << "No valid funds for any bet... User must add Funds" << std::endl;
+
+                    token.isDone();
+                    return -1;
+                }
+            }
+
+            token.isDone();
+            continue;
+        }
+
+        // set condition to true
+        validWage = true;
+    }
+
+    return wage;
 }
 
 /*
@@ -1073,12 +2104,76 @@ std::string HardwayBet::generateID()
     return ID;
 }
 
-bool HardwayBet::validPayout(const int wage)
+bool HardwayBet::validPayout(const int wage, const int balance)
 {
-    if (wage < MIN_WAGE)
-        return false;
+    if (balance < wage)
+    {
+        std::cout << "Aspirations bigger than you britches... \nYou don't have that kinda loot for those kinda wagers" << std::endl;
 
-    return true;
+        return false;
+    }
+
+    else if (wage < MIN_WAGE)
+    {
+        std::cout << "Value entered is below the minimum wage limit ($" << MIN_WAGE << ")" << std::endl;
+        return false;
+    }
+
+    return true; // all payouts work w/ whole number odds
+}
+
+int HardwayBet::setTheWagePhase(const int balance)
+{
+    double dubVal{0.0};
+    int wage{0};
+    bool validWage{false};
+
+    while (!validWage)
+    {
+        std::cout << "How much are we waging today?" << std::endl;
+
+        // User entered a decimal value
+        if (token.readDouble(dubVal))
+        {
+            std::cout << "We don't deal with coins here... \nBig Money™️ only" << std::endl;
+
+            token.isDone();
+            continue;
+        }
+        else if (!token.readInt(wage)) // invalid input
+        {
+            std::cout << "Invalid input..." << std::endl;
+
+            token.isDone();
+            continue;
+        }
+
+        // Checking validity of the payout
+        if (!validPayout(wage, balance)) // Wage entered produces invalid payout (decimal)
+        {
+            if (wage <= balance)
+            {
+                arr validWages = this->getNextValues(wage, balance);
+
+                if (this->evaluateNextVal(validWages, balance) == -1) // Invalid Funds for a valid bet - user must add funds first
+                {
+
+                    std::cout << "No valid funds for any bet... User must add Funds" << std::endl;
+
+                    token.isDone();
+                    return -1;
+                }
+            }
+
+            token.isDone();
+            continue;
+        }
+
+        // set condition to true
+        validWage = true;
+    }
+
+    return wage;
 }
 
 /*
@@ -1098,10 +2193,74 @@ std::string FireBet::generateID()
     return ID;
 }
 
-bool FireBet::validPayout(const int wage)
+bool FireBet::validPayout(const int wage, const int balance)
 {
-    if (wage < MIN_WAGE)
-        return false;
+    if (balance < wage)
+    {
+        std::cout << "Aspirations bigger than you britches... \nYou don't have that kinda loot for those kinda wagers" << std::endl;
 
-    return true;
+        return false;
+    }
+
+    else if (wage < MIN_WAGE)
+    {
+        std::cout << "Value entered is below the minimum wage limit ($" << MIN_WAGE << ")" << std::endl;
+        return false;
+    }
+
+    return true; // all payouts work w/ whole number odds
+}
+
+int FireBet::setTheWagePhase(const int balance)
+{
+    double dubVal{0.0};
+    int wage{0};
+    bool validWage{false};
+
+    while (!validWage)
+    {
+        std::cout << "How much are we waging today?" << std::endl;
+
+        // User entered a decimal value
+        if (token.readDouble(dubVal))
+        {
+            std::cout << "We don't deal with coins here... \nBig Money™️ only" << std::endl;
+
+            token.isDone();
+            continue;
+        }
+        else if (!token.readInt(wage)) // invalid input
+        {
+            std::cout << "Invalid input..." << std::endl;
+
+            token.isDone();
+            continue;
+        }
+
+        // Checking validity of the payout
+        if (!validPayout(wage, balance)) // Wage entered produces invalid payout (decimal)
+        {
+            if (wage <= balance)
+            {
+                arr validWages = this->getNextValues(wage, balance);
+
+                if (this->evaluateNextVal(validWages, balance) == -1) // Invalid Funds for a valid bet - user must add funds first
+                {
+
+                    std::cout << "No valid funds for any bet... User must add Funds" << std::endl;
+
+                    token.isDone();
+                    return -1;
+                }
+            }
+
+            token.isDone();
+            continue;
+        }
+
+        // set condition to true
+        validWage = true;
+    }
+
+    return wage;
 }

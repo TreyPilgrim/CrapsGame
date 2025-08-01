@@ -124,6 +124,11 @@ bool PlayerList::p1Shooter()
     return this->head->isShooter();
 }
 
+bool PlayerList::p1HasNoBets()
+{
+    return this->head->emptyBetAvl();
+}
+
 // Because playerNodePtr is a specific alias, gotta specify which class
 // Function to return specific players by name
 playerNodePtr PlayerList::find(const string name)

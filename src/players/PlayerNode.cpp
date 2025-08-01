@@ -64,7 +64,7 @@ void PlayerNode::newShooter()
 
 void PlayerNode::placeWager(int wageType)
 {
-    this->playerBets->generateNewBet(wageType);
+    // this->playerBets->generateNewBet(wageType);
 }
 
 void PlayerNode::viewBets()
@@ -76,4 +76,9 @@ void PlayerNode::viewBets()
 void PlayerNode::removeBet()
 {
     this->playerBets->remove();
+}
+
+bool PlayerNode::emptyBetAvl()
+{
+    return this->playerBets->isEmpty();
 }

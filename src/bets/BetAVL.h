@@ -15,63 +15,63 @@ private:
 
   // [] - variables from scope
   // () - parameter list
-  std::map<int, std::function<std::shared_ptr<BetNode>(const int)>> BetTypes = {
-      {1, [](const int val)
-       { return std::make_shared<PassLineBet>(val); }},
-      {2, [](const int val)
-       { return std::make_shared<DontPassLineBet>(val); }},
-      {3, [](const int val)
-       { return std::make_shared<ComeBet>(val); }},
-      {4, [](const int val)
-       { return std::make_shared<DontComeBet>(val); }},
-      {5, [](const int val)
-       { return std::make_shared<OddsOnPassBet>(val); }},
-      {6, [](const int val)
-       { return std::make_shared<OddsOnDontPassBet>(val); }},
-      {7, [](const int val)
-       { return std::make_shared<OddsOnComeBet>(val); }},
-      {8, [](const int val)
-       { return std::make_shared<OddsOnDontComeBet>(val); }},
-      {9, [](const int val)
-       { return std::make_shared<PlaceToWinBet>(val); }},
-      {10, [](const int val)
-       { return std::make_shared<PlaceToLoseBet>(val); }},
-      {11, [](const int val)
-       { return std::make_shared<BuyBet>(val); }},
-      {12, [](const int val)
-       { return std::make_shared<LayBet>(val); }},
-      {13, [](const int val)
-       { return std::make_shared<Big6Bet>(val); }},
-      {14, [](const int val)
-       { return std::make_shared<Big8Bet>(val); }},
-      {15, [](const int val)
-       { return std::make_shared<FieldBet>(val); }},
-      {16, [](const int val)
-       { return std::make_shared<AnyCrapsBet>(val); }},
-      {17, [](const int val)
-       { return std::make_shared<AnySevenBet>(val); }},
-      {18, [](const int val)
-       { return std::make_shared<YoBet>(val); }},
-      {19, [](const int val)
-       { return std::make_shared<AceDeuceBet>(val); }},
-      {20, [](const int val)
-       { return std::make_shared<SnakeEyesBet>(val); }},
-      {21, [](const int val)
-       { return std::make_shared<BoxCarsBet>(val); }},
-      {22, [](const int val)
-       { return std::make_shared<WorldBet>(val); }},
-      {23, [](const int val)
-       { return std::make_shared<HornBet>(val); }},
-      {24, [](const int val)
-       { return std::make_shared<HornHighBet>(val); }},
-      {25, [](const int val)
-       { return std::make_shared<AllSmallBet>(val); }},
-      {26, [](const int val)
-       { return std::make_shared<AllTallBet>(val); }},
-      {27, [](const int val)
-       { return std::make_shared<HardwayBet>(val); }},
-      {28, [](const int val)
-       { return std::make_shared<FireBet>(val); }}
+  std::map<int, std::function<std::shared_ptr<BetNode>(const int, const int)>> BetTypes = {
+      {1, [](int balance, int)
+       { return std::make_shared<PassLineBet>(balance); }},
+      {2, [](int balance, int)
+       { return std::make_shared<DontPassLineBet>(balance); }},
+      {3, [](int balance, int)
+       { return std::make_shared<ComeBet>(balance); }},
+      {4, [](int balance, int)
+       { return std::make_shared<DontComeBet>(balance); }},
+      {5, [](int balance, int point)
+       { return std::make_shared<OddsOnPassBet>(balance, point); }},
+      {6, [](int balance, int point)
+       { return std::make_shared<OddsOnDontPassBet>(balance, point); }},
+      {7, [](int balance, int point)
+       { return std::make_shared<OddsOnComeBet>(balance, point); }},
+      {8, [](int balance, int point)
+       { return std::make_shared<OddsOnDontComeBet>(balance, point); }},
+      {9, [](int balance, int point)
+       { return std::make_shared<PlaceToWinBet>(balance, point); }},
+      {10, [](int balance, int point)
+       { return std::make_shared<PlaceToLoseBet>(balance, point); }},
+      {11, [](int balance, int point)
+       { return std::make_shared<BuyBet>(balance, point); }},
+      {12, [](int balance, int point)
+       { return std::make_shared<LayBet>(balance, point); }},
+      {13, [](int balance, int)
+       { return std::make_shared<Big6Bet>(balance); }},
+      {14, [](int balance, int)
+       { return std::make_shared<Big8Bet>(balance); }},
+      {15, [](int balance, int)
+       { return std::make_shared<FieldBet>(balance); }},
+      {16, [](int balance, int)
+       { return std::make_shared<AnyCrapsBet>(balance); }},
+      {17, [](int balance, int)
+       { return std::make_shared<AnySevenBet>(balance); }},
+      {18, [](int balance, int)
+       { return std::make_shared<YoBet>(balance); }},
+      {19, [](int balance, int)
+       { return std::make_shared<AceDeuceBet>(balance); }},
+      {20, [](int balance, int)
+       { return std::make_shared<SnakeEyesBet>(balance); }},
+      {21, [](int balance, int)
+       { return std::make_shared<BoxCarsBet>(balance); }},
+      {22, [](int balance, int)
+       { return std::make_shared<WorldBet>(balance); }},
+      {23, [](int balance, int)
+       { return std::make_shared<HornBet>(balance); }},
+      {24, [](int balance, int point)
+       { return std::make_shared<HornHighBet>(balance, point); }},
+      {25, [](int balance, int)
+       { return std::make_shared<AllSmallBet>(balance); }},
+      {26, [](int balance, int)
+       { return std::make_shared<AllTallBet>(balance); }},
+      {27, [](int balance, int point)
+       { return std::make_shared<HardwayBet>(balance, point); }},
+      {28, [](int balance, int)
+       { return std::make_shared<FireBet>(balance); }}
 
   };
 
@@ -158,7 +158,7 @@ public:
   ~BetAVL() = default;
 
   // Insert
-  void generateNewBet(int wageType);
+  void generateNewBet(const int &wageType, const int &balance);
   bool insert(int wageType, int wage, int point = 0);
 
   // Removal
@@ -171,5 +171,7 @@ public:
   void inOrder();
   void preOrder();
   void postOrder();
+
+  bool isEmpty();
 };
 std::ostream &operator<<(std::ostream &os, const betNodePtr &betNode); // Operator overload for cout

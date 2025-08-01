@@ -242,16 +242,19 @@ bool BetAVL::inContainer(const std::list<int> winnersCircle, const int point)
 // isWinner
 bool BetAVL::isWinner(const betNodePtr node, const int *theDie[])
 {
+    return false;
 }
 
 // isLoser
 bool BetAVL::isLoser(betNodePtr node, const int *theDie[])
 {
+    return false;
 }
 
 // isTie
 bool BetAVL::isTie(const betNodePtr node, const int *theDie[])
 {
+    return false;
 }
 
 // Add tickets to their appropriate list
@@ -389,14 +392,14 @@ int BetAVL::settleLists(std::list<int> &winLoseList, int whichList)
     Public Functions
 *********************************************************************/
 
-void BetAVL::generateNewBet(int wageType)
-{
-    auto it = BetTypes.find(wageType);
-    betNodePtr tmp = it->second(); // needs () because the second value is a function
+// void BetAVL::generateNewBet(const int &wageType, const int &balance)
+// {
+//     auto it = BetTypes.find(wageType);
+//     betNodePtr tmp = it->second(balance); // needs () because the second value is a function
 
-    // TODO: Update Insert to just take a node
-    // All other arithemetic should be handled there
-}
+//     // TODO: Update Insert to just take a node
+//     // All other arithemetic should be handled there
+// }
 // Insert
 bool BetAVL::insert(int wageType, int wage, int point)
 {
@@ -418,6 +421,7 @@ bool BetAVL::insert(int wageType, int wage, int point)
 // Cashout --- Finish
 int cashOutNode(betNodePtr &node, int const *theDie[])
 {
+    return -1;
 }
 
 int cashOutCheck(betNodePtr &node, int const *theDie[])
@@ -440,6 +444,10 @@ void BetAVL::inOrder()
     inOrder(this->root);
 }
 
+bool BetAVL::isEmpty()
+{
+    return this->root == nullptr ? true : false;
+}
 //-----------------------------------------------------------------------------------------
 // Operator Overload for <<
 /*

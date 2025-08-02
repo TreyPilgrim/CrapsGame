@@ -153,56 +153,88 @@ void Craps::placeWagerOptions() // Pass Bet & Don't Pass Bet
 void Craps::roundChoices()
 {
     int userInput{0};
+    double badInput{0.0};
     char charInput{'t'};
     /*
-        - Place Wager
-        - View Bet
-        - Remove Bet
-        - Add Funds
+        1 - Place Wager
+        2 - View Bet
+        3 - Remove Bet
+        4 - Add Funds
+        q - quit
+        r - roll
     */
-    this->roundChoicesDisplay();
 
-    while ((userInput > 4 || userInput < 1) && charInput != 'q')
+    while (charInput != 'q' || charInput != 'Q')
     {
+        this->displayRoundChoices();
+
         if (!token.readInt(userInput))
         {
-            if (!token.readChar(charInput))
-                return this->failIf("Craps::roundChoices - invalid input?");
+            token.readChar(charInput);
 
-            if (charInput != 'q')
-                std::cout << "Invalid option" << std::endl;
+            switch (charInput)
+            {
+            case 'q':
+            case 'Q':
 
-            token.isDone();
+                // Craps::quit() - Needs to send flag to end porogram and close out
+                // Will break loop... consider making functionality on the outside of this function
+                token.isDone(); // clear stream before breaking loop
+                continue;
+                break;
+
+            case 'r':
+            case 'R':
+                // Craps::readyToRoll(const playerNode shooter)
+                // Craps::roll()
+                // Craps::EvaluateAVL(int arr* daDie)
+                //  - Should output what is happening with user bets
+
+                break;
+
+            default:
+                std::cout << "An invalid input..." << std::endl;
+                token.isDone(); // clear stream
+                break;
+            }
+
+            token.isDone(); // Clear stream before next iteration
+            continue;
         }
+
+        switch (userInput)
+        {
+        case '1':
+            this->placeWager();
+            break;
+
+        case '2':
+            this->viewBets();
+            break;
+
+        case '3':
+            this->removeBets();
+            break;
+
+        case '4':
+            this->addFunds();
+            break;
+
+        default:
+            std::cout << "Invalid input (1-4)" << std::endl;
+            token.isDone();
+            break;
+        }
+
+        token.isDone(); // clear stream before next iteration
     }
 
-    switch (userInput)
-    {
-    case '1':
-        this->placeWager();
-        break;
-
-    case '2':
-        this->viewBets();
-        break;
-
-    case '3':
-        this->removeBets();
-        break;
-
-    case '4':
-        this->addFunds();
-        break;
-
-    default:
-        this->quit();
-        break;
-    }
+    std::cout << "Exiting: Craps::roundChoices" << std::endl;
 }
 void Craps::quit()
 {
 }
-void Craps::roundChoicesDisplay()
+void Craps::displayRoundChoices()
 {
     std::cout << "\nRound Choices \n------------------------------------------------" << std::endl;
     std::cout << "1. Place Wager" << std::endl;
@@ -213,76 +245,17 @@ void Craps::roundChoicesDisplay()
     std::cout << "q. Quit" << std::endl;
 }
 
-void Craps::placeWager()
+void Craps::placeWager() // update
 {
     double dubInput{0.0};
     int intInput{0};
     char charInput{'t'};
     bool placeWage{true};
 
-    while (placeWage)
-    {
-        this->placeWagerOptions();
-
-        if (token.readDouble(dubInput))
-        {
-            std::cout << "Invalid input..." << std::endl;
-            token.isDone();
-            continue;
-        }
-
-        if (!token.readInt(intInput))
-        {
-            token.readChar(charInput);
-
-            switch (charInput)
-            {
-            case 'a':
-                this->viewBets();
-                break;
-
-            case 'b':
-                this->removeBets();
-                break;
-
-            case 'c':
-                this->addFunds();
-                break;
-
-            case 'q':
-                this->quit();
-                break;
-
-            case 'r':
-                this->dice->rollDice();
-                break;
-
-            case 'z':
-                token.isDone();
-                return;
-                break;
-
-            default:
-                std::cout << "Invalid Input..." << std::endl;
-                charInput = 't';
-                token.isDone();
-                continue;
-            }
-
-            token.isDone();
-            placeWage = false;
-            continue;
-        }
-
-        if (!this->pushWager(intInput))
-        {
-            std::cout << "Invalid input..." << std::endl;
-            continue;
-        }
-    }
+    this->placeWagerOptions(); // Display bet options - comeOutRoll Based
 }
 
-bool Craps::pushWager(const int &intInput)
+bool Craps::pushWager(const int &intInput) // UPDATE
 {
     if (intInput < 1 || intInput > 28)
         return false;
@@ -376,67 +349,8 @@ void Craps::theGame()
     welcome();
     setP1();
 
-    int intInput{0};
-    double dubInput{0.0};
-    char charInput{'t'};
-
-    while (charInput != 'q' || charInput != 'Q')
-    {
-        this->roundChoicesDisplay();
-
-        if (token.readDouble(dubInput)) // Invalid Input
-        {
-            std::cout << "Invalid input..." << std::endl;
-            continue;
-        }
-
-        if (!token.readInt(intInput))
-        {
-            token.readChar(charInput);
-
-            switch (charInput)
-            {
-            case 'q':
-            case 'Q':
-
-                std::cout << "TODO: Create Game summary log function/cout << playerNode -- Congrats on finally getting far enough to test this part lol" << std::endl;
-                continue;
-                break;
-
-            case 'r':
-            case 'R':
-
-                if (Gamblers->p1HasNoBets())
-                {
-                    std::cout << "You haven't made any bets yet... you can't roll without bets" << std::endl;
-                    break;
-                }
-
-                this->dice->rollDice();
-                this->dice->printDice();
-
-                break; // Do post roll logic
-
-            default:
-                std::cout
-                    << "Invalid input..."
-                    << std::endl;
-                break;
-            }
-
-            token.isDone();
-            continue;
-        }
-
-        // switch (intInput)
-        // {
-        // case 1:
-        // case 2:
-        // case 3:
-        // case 4:
-        // default:
-        // }
-    }
+    // Player 1 is set, go about the game logic
+    this->roundChoices();
 
     std::cout << "Congrats sailor, you made it to the end" << std::endl;
 }

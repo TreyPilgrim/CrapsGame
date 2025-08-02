@@ -38,24 +38,41 @@ private:
     // Menu Functions
     // TODO: Welcome Screen
     void welcome();
-    void placeWagerOptions();
-    void roundChoices();
+    void placeWagerOptions(); // UPDATE *****
 
-    // Round Choices - Helpers
-    void roundChoicesDisplay();
-    //---------------------------------------
-    void placeWager();
-    bool pushWager(const int &intInput);
-    //---------------------------------------
+    /*
+        Round Choices
+    */
+    void roundChoices();        // Engine
+    void displayRoundChoices(); // Display RoundChoices™️
+
+    // 1 - Place Wager
+    void placeWager();                   // UPDATE *****
+    bool pushWager(const int &intInput); // UPDATE *****
+
+    // 2 - View Bets
     void viewBets();
-    void removeBets();
-    void addFunds();
-    void quit();
 
+    // 3 - Remove Bet
+    void removeBets();
+
+    // 4 - Add Funds
+    void addFunds();
+
+    // q - Quit
+    void quit();
+    // r - roll (Dice.h function)
+
+    // -------------------------------------------------------------------------------------------
+
+    /*
+        Set P1
+        - Getting a UserName
+        - Getting starting balance
+    */
+    void setP1();
     int getP1Balance();
     std::string createUserName();
-
-    void setP1();
 
 public:
     void theGame();

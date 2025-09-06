@@ -129,6 +129,11 @@ bool PlayerList::p1HasNoBets()
     return this->head->emptyBetAvl();
 }
 
+void PlayerList::p1PushWager(const int betChoice)
+{
+    this->head->placeWager(betChoice);
+}
+
 // Because playerNodePtr is a specific alias, gotta specify which class
 // Function to return specific players by name
 playerNodePtr PlayerList::find(const string name)

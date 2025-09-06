@@ -42,7 +42,7 @@ void Craps::placeWagerOptions() // Pass Bet & Don't Pass Bet
         - Adding Funds
     */
 
-    std::cout << "PLACE YOUR BETS!! (Case Sensitive)" << std::endl;
+    std::cout << "PLACE YOUR BETS!!" << std::endl;
 
     if (this->comeOutRoll) // Only Pass or Don't Pass bets
     {
@@ -89,9 +89,8 @@ void Craps::placeWagerOptions() // Pass Bet & Don't Pass Bet
         std::cout << "a. View Bets" << std::endl;
         std::cout << "b. Remove Bets" << std::endl;
         std::cout << "c. Add Funds" << std::endl;
-        std::cout << "Finished Betting?" << std::endl;
-        std::cout << "q. Quit" << std::endl;
-        std::cout << "r. Roll" << std::endl;
+
+        std::cout << "\nFinished Betting?" << std::endl;
         std::cout << "z. Return to Round Choices Menu" << std::endl;
     }
     else // Can't do pass/dontPass bets
@@ -135,7 +134,6 @@ void Craps::placeWagerOptions() // Pass Bet & Don't Pass Bet
         std::cout << "Multi-Roll Proposition Bets" << std::endl;
         std::cout << "25. All Small Bet" << std::endl;
         std::cout << "26. All Tall Bet" << std::endl;
-
         std::cout << "27. Hardways Bet" << std::endl;
         std::cout << "28. Fire Bet" << std::endl;
 
@@ -143,9 +141,8 @@ void Craps::placeWagerOptions() // Pass Bet & Don't Pass Bet
         std::cout << "a. View Bets" << std::endl;
         std::cout << "b. Remove Bets" << std::endl;
         std::cout << "c. Add Funds" << std::endl;
-        std::cout << "Finished Betting?" << std::endl;
-        std::cout << "q. Quit" << std::endl;
-        std::cout << "r. Roll" << std::endl;
+
+        std::cout << "\nFinished Betting?" << std::endl;
         std::cout << "z. Return to Round Choices Menu" << std::endl;
     }
 }
@@ -250,9 +247,234 @@ void Craps::placeWager() // update
     double dubInput{0.0};
     int intInput{0};
     char charInput{'t'};
-    bool placeWage{true};
+    bool wagerIsPlaced{false};
 
-    this->placeWagerOptions(); // Display bet options - comeOutRoll Based
+    while (!wagerIsPlaced)
+    {
+        this->placeWagerOptions(); // Display bet options - comeOutRoll Based
+
+        if (!token.readInt(intInput))
+        {
+            token.readChar(charInput);
+
+            switch (charInput)
+            {
+            case 'a':
+            case 'A':
+                this->viewBets(); // TODO
+                break;
+
+            case 'b':
+            case 'B':
+                this->removeBets(); // TODO
+                break;
+
+            case 'c':
+            case 'C':
+                this->addFunds(); // TODO
+                break;
+
+            case 'z': // Go back to main menu
+            case 'Z':
+                token.isDone(); // clear stream before returning
+                return;
+                break;
+
+            default:
+                std::cout << "Invalid Input chap..." << std::endl;
+                break;
+            }
+
+            token.isDone(); // clear stream before returning
+            continue;       // restart loop for next input
+        }
+
+        // Integer input was successful
+
+        // Check input is withing proper bounds - ComeOutRoll sensitive
+        if (!this->validBetTypeSelected(intInput))
+        {
+            std::cout << "Invalid Bet choice... " << intInput << " is not a valid input." << std::endl;
+            token.isDone(); // clear stream before restarting loop
+            continue;
+        }
+
+        int wageType = intInput;
+        betPtr bet;
+
+        /*
+            TODO:
+            - Create poly function that will allow me to call once and it will call the appropriate function that will return a BetNode of the appropriate type
+            - pass the wageType into the function so it knows what function to use
+        */
+        switch (wageType)
+        {
+        case 1: // Pass - Place bet
+            break;
+
+        case 2: // Dont Pass - Place Bet
+            break;
+
+        case 3: // Come - Place Bet
+            break;
+
+        case 4: // Dont Come - Place Bet
+            break;
+
+            //  Odds On Bets ([dont] pass, [dont] come)
+
+        case 5: // Odds On Pass - Needs to bet on existing Pass Bet
+
+            /*
+             * getPassBet(); - return into an vector
+             * display options - for loop most likely
+             * Get input
+             * get point from the pass bet of choice
+             */
+
+        case 6: // Odds on Dont Pass - Needs to bet on existing Don't Pass Bet
+
+            /*
+             * getDontPassBet(); - return into an vector
+             * display options - for loop most likely
+             * Get input
+             * get point from the dont pass bet of choice
+             */
+        case 7: // Odds on Come - Needs to bet on existing Come Bet
+
+            /*
+             * getComeBet(); - return into an vector
+             * display options - for loop most likely
+             * Get input
+             * get point from the Come bet of choice
+             */
+        case 8: // Odds on Dont Come - Needs to bet on existing Don't Come Bet
+
+            /*
+             * getDontComeBet(); - return into an vector
+             * display options - for loop most likely
+             * Get input
+             * get point from the Dont Come bet of choice
+             */
+
+            // oddsOnBet(const int betChoiceNum)
+            break;
+
+            // Placement Bets
+
+        case 9: // Place to win - User picks point
+            break;
+
+        case 10: // Place to Lose - User Picks Point
+            break;
+
+        case 11: // Buy Bet - User picks point
+            break;
+
+        case 12: // Lay Bet - User Picks Point
+            break;
+
+        case 13: // Big 6 - Predetermined point
+            break;
+
+        case 14: // Big 8 - Predetermined point
+            break;
+
+        case 15: // Field - No point needed
+            break;
+
+        case 16: // Any Craps - No Point Needed
+            break;
+
+        case 17: // Any Seven - Place Bet
+            break;
+
+        case 18: // Yo - Predetermined Point; place bet
+            break;
+
+        case 19: // Ace Deuce - Predetermined Point; place bet
+            break;
+
+        case 20: // Snake Eyes - Predetermined Point; place bet
+            break;
+
+        case 21: // Box Car - Predetermined Point
+            break;
+
+        case 22: // World - Place Bet (?)
+            break;
+
+        case 23: // Horn - Place Bet
+            break;
+
+        case 24: // Horn High - Select High Number
+            break;
+
+        case 25: // All Small - Place Bet
+            break;
+
+        case 26: // All Tall - Place Bet
+            break;
+
+        case 27: // HardWay - User selects hardway type
+            break;
+
+        case 28: // Fire - Place Bet and vibe twin0..
+            break;
+
+        default:
+            this->failIf("Invalid input for BetOptions - Craps::placeWager()");
+        }
+        /* Call PlayersList to push
+            - need to determine if point is needed for the push
+            * options: 5 6 7 8 9 10 11 12 24 27
+        */
+
+        // Have the Initializer handle point setting
+        // Some require a point chosen, some chose based on other factors. too much to care about from here
+
+        // Determine if Bet Type Needs a point
+        if (this->isBetTypeThatNeedsPoint(wageType))
+        {
+            // Get Point
+            /*
+                - Decide if this matters
+                - Do i want to just call the SetWager(int wageType) and let the initializer handle point setting or get it on the frontend?
+                - Error handling is going to be an issue
+            */
+        }
+    }
+}
+
+bool Craps::validBetTypeSelected(const int intInput)
+{
+    if (this->comeOutRoll)
+    {
+        // 1-2 & 9-28
+        if ((intInput > 0 && intInput < 3) || (intInput > 8 && intInput < 29))
+            return true;
+    }
+    else
+    {
+        // 3-28
+        if (intInput > 2 && intInput < 29)
+            return true;
+    }
+
+    return false; // False otherwise
+}
+
+bool Craps::isBetTypeThatNeedsPoint(const int intInput)
+{
+    int pointInputs[10] = {5, 6, 7, 8, 9, 10, 11, 12, 24, 27};
+
+    for (auto val : pointInputs)
+    {
+        if (intInput == val)
+            return true;
+    }
+
+    return false;
 }
 
 bool Craps::pushWager(const int &intInput) // UPDATE
@@ -317,7 +539,7 @@ std::string Craps::createUserName()
     return userName;
 }
 
-void Craps::setP1()
+p1Ptr Craps::setP1()
 {
     // Member initializers for PlayerList() for creation of P1
     string player1 = this->createUserName();
@@ -347,7 +569,7 @@ void Craps::setP1()
 void Craps::theGame()
 {
     welcome();
-    setP1();
+    this->p1 = setP1();
 
     // Player 1 is set, go about the game logic
     this->roundChoices();

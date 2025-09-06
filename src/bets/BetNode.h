@@ -110,7 +110,7 @@ public:
 
 //-----------------------------------------------------------------------------------------
 // Come Out Roll Bets -- Add pointer to
-// Pass Line Bet - A
+// Pass Line Bet - A/1
 /*
     - First Roll
         - Win on 7 or 11
@@ -165,7 +165,7 @@ public:
     bool losingTicket(const int diceVal);
 };
 
-// Don't Pass Line Bet - B
+// Don't Pass Line Bet - B/2
 /*
     - First Roll
         - Win on 2 or 3
@@ -224,7 +224,7 @@ public:
 
 // Post Come Out Roll Bets
 
-// Come Bet - C
+// Come Bet - C/3
 /*
     - First Roll
         - Win on 7 or 11
@@ -281,7 +281,7 @@ public:
     bool losingTicket(const int diceVal);
 };
 
-// Don't Come Bet - D
+// Don't Come Bet - D/4
 /*
     - First Roll
         - Win on 2 or 3
@@ -351,7 +351,7 @@ public:
         - Add functionality to
 
 */
-// Odds on Pass Bet - E
+// Odds on Pass Bet - E/5
 /*
     - Attached to a Pass Bet
 
@@ -410,7 +410,7 @@ public:
     }
 };
 
-// Odds on Don't Pass Bet - F
+// Odds on Don't Pass Bet - F/6
 /*
     - Attached to a Don't Pass Bet
 
@@ -470,7 +470,7 @@ public:
     }
 };
 
-// Odds on Come Bet - G
+// Odds on Come Bet - G/7
 /*
     - Attached to a Pass Bet
 
@@ -528,7 +528,7 @@ public:
     }
 };
 
-// Odds on Don't Come Bet - H
+// Odds on Don't Come Bet - H/8
 /*
     - Attached to a Don't Pass Bet
 
@@ -588,7 +588,7 @@ public:
 
 // Place Bets - Made any time after come out roll
 
-// Place to Win Bet - I
+// Place to Win Bet - I/9
 /*
     - can be made ANYTIME
     - Win on number you pick
@@ -646,7 +646,7 @@ public:
     }
 };
 
-// Place to Lose Bet - J
+// Place to Lose Bet - J/10
 /*
     - can be placed ANYTIME
     - Win on 7
@@ -700,7 +700,7 @@ public:
     }
 };
 
-// Buy Bet - K
+// Buy Bet - K/11
 /*
     - can be placed ANYTIME
     - Win on (selected) point
@@ -761,7 +761,7 @@ public:
     }
 };
 
-// Lay Bet - L
+// Lay Bet - L/12
 /*
     - Can Be placed ANYTIME
     - Win on 7
@@ -818,7 +818,7 @@ public:
     }
 };
 
-// Big 6 Bet - M
+// Big 6 Bet - M/13
 /*
     - Can be made ANYTIME
     - Win 6
@@ -861,7 +861,7 @@ public:
     }
 };
 
-// Big 8 Bet - N
+// Big 8 Bet - N/14
 /*
     - Can be made ANYTIME
     - Win on 8
@@ -905,7 +905,7 @@ public:
 
 // Single-Roll Proposition Bets - Any Time
 
-// Field Bet - O
+// Field Bet - O/15
 /*
    - Can Be placed ANYTIME
    - Wins on 2(double), 3, 4, 9, 10, 11, 12(double)
@@ -957,7 +957,7 @@ public:
     }
 };
 
-// Any Craps Bet - P
+// Any Craps Bet - P/16
 /*
     - Can be placed ANYTIME
     - Wins on 2, 3, 12
@@ -1004,7 +1004,7 @@ public:
     }
 };
 
-// Any Seven Bet - R
+// Any Seven Bet - R/17
 /*
     - Place ANYTIME
     - Wins on 7
@@ -1046,7 +1046,7 @@ public:
     }
 };
 
-// Yo Bet - S
+// Yo Bet - S/18
 /*
     - ANYTIME bet
     - Win on 11
@@ -1087,7 +1087,7 @@ public:
     }
 };
 
-// Ace Deuce Bet - T
+// Ace Deuce Bet - T/19
 /*
     - ANYTIME
     - Wins on 3
@@ -1129,7 +1129,7 @@ public:
     }
 };
 
-// Snake Eyes Bet - U
+// Snake Eyes Bet - U/20
 /*
     - ANYTIME bet
     - Win on 2
@@ -1171,7 +1171,7 @@ public:
     }
 };
 
-// Box Cars Bet - V
+// Box Cars Bet - V/21
 /*
     - ANYTIME
     - Win on 12
@@ -1213,7 +1213,7 @@ public:
     }
 };
 
-// World Bet - Wage must be divisible by 5 W
+// World Bet - Wage must be divisible by 5 W/22
 /*
     - Bet must be divisible by 5
     - dividen is divided amongst the 5 winning values
@@ -1266,7 +1266,7 @@ public:
     }
 };
 
-// Horn Bet - X
+// Horn Bet - X/23
 /*
     - Wage must be divisible by 4
     - Dividen is what gets multiplied on payouts
@@ -1315,7 +1315,7 @@ public:
     }
 };
 
-// Horn High Bet - Y
+// Horn High Bet - Y/24
 /*
     - Same as Horn Bet with Nuances
     - Wage must be divisible by 5 (still same 4 winning numbers)
@@ -1361,7 +1361,7 @@ public:
     }
 };
 
-// All Small Bet - Z
+// All Small Bet - Z/25
 /*
     - Win by having all winning #s rolled (once minimum0) before 7
     - Lose by 7 being rolled before all winning #s rolled
@@ -1402,7 +1402,7 @@ public:
     }
 };
 
-// All Tall Bet - a
+// All Tall Bet - a/26
 /*
     - Win by having all winning #s rolled (once minimum0) before 7
     - Lose by 7 being rolled before all winning #s rolled
@@ -1446,7 +1446,7 @@ public:
 
 // Multi-Roll Proposition Bets - Any Time
 
-// Hardway Bet - b
+// Hardway Bet - b/27
 /*
     - ANYTIME
     - User Picks Hardway #
@@ -1501,7 +1501,7 @@ public:
     }
 };
 
-// Fire Bet - c
+// Fire Bet - c/28
 /*
     - Only able to make on Come Out Roll
     - Tied directly to current shooter

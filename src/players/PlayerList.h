@@ -15,6 +15,7 @@ private:
     // Unique Name finder
     bool sameName(const string name1, const string name2);
     bool sameNameFromNode(const string userName, playerNodePtr comparison);
+
     bool pushWagerP1Version(const int &wageType, const std::string &name);
 
 public:
@@ -29,6 +30,7 @@ public:
     bool setShooter();
     bool p1Shooter();
     bool p1HasNoBets();
+    void p1PushWager(const int betChoice);
 
     bool pop(std::string name); // remove node via name
     std::string peek();         // peek at the head node's name
